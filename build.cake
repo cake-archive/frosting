@@ -43,9 +43,10 @@ Task("Build")
     .IsDependentOn("Restore")
     .Does(context =>
 {
-    foreach(var path in parameters.Projects)
+    foreach(var project in parameters.Projects)
     {
-        DotNetCoreBuild(path.FullPath, new DotNetCoreBuildSettings(){
+        Information("Building {0}...", project.Name);
+        DotNetCoreBuild(project.Path.FullPath, new DotNetCoreBuildSettings(){
             Configuration = "Release",
             VersionSuffix = parameters.Suffix
         });
@@ -67,12 +68,19 @@ Task("Package")
     .IsDependentOn("Unit-Tests")
     .Does(context =>
 {
-    DotNetCorePack("./src/Cake.Frosting/project.json", new DotNetCorePackSettings(){
-        Configuration = "Release",
-        VersionSuffix = parameters.Suffix,
-        NoBuild = true,
-        Verbose = false
-    });
+    foreach(var project in parameters.Projects)
+    {
+        if(project.Publish) 
+        {
+            Information("Packing {0}...", project.Name);
+            DotNetCorePack(project.Path.FullPath, new DotNetCorePackSettings(){
+                Configuration = "Release",
+                VersionSuffix = parameters.Suffix,
+                NoBuild = true,
+                Verbose = false
+            });
+        }
+    }
 });
 
 Task("Publish-MyGet")
@@ -80,7 +88,14 @@ Task("Publish-MyGet")
     .WithCriteria(() => parameters.ShouldPublishToMyGet)
     .Does(context =>
 {
-    Publish(context, parameters, parameters.MyGetSource, parameters.MyGetApiKey);
+    foreach(var project in parameters.Projects)
+    {
+        if(project.Publish) 
+        {
+            Information("Publishing {0} to MyGet...", project.Name);
+            Publish(context, parameters, project, parameters.MyGetSource, parameters.MyGetApiKey);
+        }
+    }
 });
 
 Task("Default")

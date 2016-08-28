@@ -8,7 +8,7 @@ public class Parameters
     public string Version { get; set; }
     public string Suffix { get; set; }
     public bool IsRunningOnAppVeyor { get; private set; }
-    public FilePath[] Projects { get; set; }
+    public Project[] Projects { get; set; }
 
     public string MyGetSource { get; set; }
     public string MyGetApiKey { get; set; }
@@ -19,12 +19,14 @@ public class Parameters
     public bool IsTagged { get; set; }
     public bool IsMasterBranch { get; set; }
 
+    public bool ForcePublish { get; set; }
+
     public bool ShouldPublishToMyGet
     {
         get
         {
-            return !IsLocalBuild && !IsPullRequest && IsOriginalRepo 
-                && (IsTagged || !IsMasterBranch);
+            return ForcePublish || (!IsLocalBuild && !IsPullRequest && IsOriginalRepo 
+                && (IsTagged || !IsMasterBranch));
         }
     }
 
@@ -47,10 +49,13 @@ public class Parameters
         parameters.IsTagged = IsBuildTagged(buildSystem);
         parameters.IsMasterBranch = StringComparer.OrdinalIgnoreCase.Equals("master", buildSystem.AppVeyor.Environment.Repository.Branch);
 
-        parameters.Projects = new FilePath[] {
-            "./src/Cake.Frosting/project.json",
-            "./src/Cake.Frosting.Tests/project.json",
-            "./src/Sandbox/project.json",
+        parameters.ForcePublish = context.Argument<bool>("forcepublish", false);
+
+        parameters.Projects = new Project[] {
+            new Project { Name = "Cake.Frosting", Path = "./src/Cake.Frosting/project.json", Publish = true },
+            new Project { Name = "Cake.Frosting.Tests" ,Path = "./src/Cake.Frosting.Tests/project.json" },
+            new Project { Name = "Sandbox", Path = "./src/Sandbox/project.json" },
+            new Project { Name = "Cake.Frosting.Cli", Path = "./src/Cake.Frosting.Cli/project.json", Publish = true }
         };
 
         return parameters;

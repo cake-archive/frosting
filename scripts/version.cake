@@ -46,7 +46,7 @@ public class BuildVersion
             context.Information("Fetching verson from first project.json...");
             foreach(var project in parameters.Projects) 
             {
-                var content = System.IO.File.ReadAllText(project.FullPath, Encoding.UTF8);
+                var content = System.IO.File.ReadAllText(project.Path.FullPath, Encoding.UTF8);
                 var node = Newtonsoft.Json.Linq.JObject.Parse(content);
                 if(node["version"] != null) 
                 {
@@ -66,14 +66,14 @@ public class BuildVersion
 
     public static void UpdateVersion(Parameters parameters)
     {
-        foreach(var path in parameters.Projects)
+        foreach(var project in parameters.Projects)
         {
-            var content = System.IO.File.ReadAllText(path.FullPath, Encoding.UTF8);
+            var content = System.IO.File.ReadAllText(project.Path.FullPath, Encoding.UTF8);
             var node = Newtonsoft.Json.Linq.JObject.Parse(content);
             if(node["version"] != null && node["version"].ToString() != (parameters.Version + "-*"))
             {
                 node["version"].Replace(string.Concat(parameters.Version, "-*"));
-                System.IO.File.WriteAllText(path.FullPath, node.ToString(), Encoding.UTF8);
+                System.IO.File.WriteAllText(project.Path.FullPath, node.ToString(), Encoding.UTF8);
             };
         }
     }

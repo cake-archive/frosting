@@ -1,6 +1,7 @@
 #load "parameters.cake"
+#load "project.cake"
 
-public static void Publish(ICakeContext context, Parameters parameters, string source, string apiKey)
+public static void Publish(ICakeContext context, Parameters parameters, Project project, string source, string apiKey)
 {
     if(source == null)
     {
@@ -11,10 +12,11 @@ public static void Publish(ICakeContext context, Parameters parameters, string s
         throw new CakeException("NuGet API key was not provided.");
     }
 
+    var root = project.Path.GetDirectory();
     var packageVersion = string.Concat(parameters.Version, "-", parameters.Suffix).Trim('-');
     var files = new[] {
-        "./src/Cake.Frosting/bin/Release/Cake.Frosting." + packageVersion + ".nupkg",
-        "./src/Cake.Frosting/bin/Release/Cake.Frosting." + packageVersion + ".symbols.nupkg"
+        root.FullPath + "/bin/Release/" + project.Name + "." + packageVersion + ".nupkg",
+        root.FullPath + "/bin/Release/" + project.Name + "." + packageVersion + ".symbols.nupkg"
     };
 
     foreach(var file in files) 
