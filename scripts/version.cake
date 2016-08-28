@@ -22,9 +22,17 @@ public class BuildVersion
         string version = null;
         string semVersion = null;
 
-        if (context.IsRunningOnWindows() && context.BuildSystem().AppVeyor.IsRunningOnAppVeyor)
+        if (context.IsRunningOnWindows())
         {
-            context.Information("Fetching verson via GitVersion...");
+            context.Information("Calculating semantic version...");
+            if (!parameters.IsLocalBuild)
+            {
+                context.GitVersion(new GitVersionSettings
+                {
+                    OutputType = GitVersionOutput.BuildServer
+                });
+            }
+            
             GitVersion assertedVersions = context.GitVersion(new GitVersionSettings
             {
                 OutputType = GitVersionOutput.Json
