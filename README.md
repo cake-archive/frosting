@@ -13,10 +13,27 @@ in alpha, but more information, documentation and samples will be added soon.
 3. [License](https://github.com/cake-build/frosting#license)
 
 ## Example
- 
-Start by adding a `project.json` file.  
-The `Cake.Frosting` package will decide what version of `Cake.Core` and `Cake.Common`
-you will run.
+
+### 1. Add nuget.config
+
+Start by adding a `nuget.config` file to your project.  
+The reason for this is that Cake.Frosting is in preview at the moment and not
+available on [nuget.org](https://nuget.org).
+
+```xml
+<configuration>
+  <packageSources>
+    <add key="nuget.org" value="https://api.nuget.org/v3/index.json" protocolVersion="3" />
+    <add key="myget.org" value="https://www.myget.org/F/cake/api/v3/index.json" protocolVersion="3" />
+  </packageSources>
+</configuration>
+```
+
+### 2. Add project.json
+
+Now create a `project.json` file that will tell `dotnet` what dependencies are required
+to build our program. The `Cake.Frosting` package will decide what version of `Cake.Core` and `Cake.Common`
+you will get.
 
 ```json
 {
@@ -25,7 +42,7 @@ you will run.
     "emitEntryPoint": true
   },
   "dependencies": {
-    "Cake.Frosting": "0.1.0-alpha001",
+    "Cake.Frosting": "0.1.0-alpha0001",
     "Microsoft.NETCore.App": {
       "type": "platform",
       "version": "1.0.0"
@@ -39,11 +56,14 @@ you will run.
 }
 ```
 
+### 3. Add Program.cs
+
 For the sake of keeping the example simple, all classes are listed after each other, 
 but you should of course treat the source code of your build scripts like any other
 code and divide them up in individual files.
 
 ```csharp
+using Cake.Common.Diagnostics;
 using Cake.Core;
 using Cake.Core.Diagnostics;
 using Cake.Frosting;
@@ -83,15 +103,15 @@ public class MySettings : FrostingContext
 [TaskName("Provide-Another-Name-Like-This")]
 public class Build : FrostingTask<MySettings>
 {
-    public override bool ShouldRun(Settings context)
+    public override bool ShouldRun(MySettings context)
     {
         // Don't run this task on OSX.
         return context.Environment.Platform.Family != PlatformFamily.OSX;
     }
 
-    public override void Run(FrostingTask context)
+    public override void Run(MySettings context)
     {
-        context.Log.Information("Magic: {0}", context.Magic);
+        context.Information("Magic: {0}", context.Magic);
     }
 }
 
@@ -101,14 +121,17 @@ public class Default : FrostingTask
     // If you don't inherit from the generic task
     // the standard ICakeContext will be provided.
 }
-
 ``` 
 
-To run the script, simply run it like any .NET Core application.
+### 4. Run it!
+
+To execute the build, simply run it like any .NET Core application.  
+In the example we provide the custom `--magic` argument. Notice that
+we use `--` to separate the arguments to the `dotnet` command.
 
 ```powershell
 > dotnet restore
-> dotnet run --verbosity=verbose --working="./.."
+> dotnet run -- --magic
 ```
 
 ## Acknowledgement
