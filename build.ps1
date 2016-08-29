@@ -91,16 +91,16 @@ if (!(Test-Path $NugetPath)) {
 }
 
 ###########################################################################
-# INSTALL CAKE
+# INSTALL TOOLS
 ###########################################################################
 
-# Make sure Cake has been installed.
-$CakePath = Join-Path $ToolPath "Cake.CoreCLR.$CakeVersion/Cake.dll"
-if (!(Test-Path $CakePath)) {
-    Write-Host "Installing Cake..."
-    Invoke-Expression "&`"$NugetPath`" install Cake.CoreCLR -Version $CakeVersion -OutputDirectory `"$ToolPath`" -Prerelease" | Out-Null;
+$GitVersionVersion = "3.6.2"
+$GitVersionPath = Join-Path $ToolPath "GitVersion.CommandLine.$GitVersionVersion/Cake.dll"
+if (!(Test-Path $GitVersionPath)) {
+    Write-Host "Installing GitVersion..."
+    Invoke-Expression "&`"$NugetPath`" install GitVersion.CommandLine -Version $GitVersionVersion -OutputDirectory `"$ToolPath`"" | Out-Null;
     if ($LASTEXITCODE -ne 0) {
-        Throw "An error occured while restoring Cake from NuGet."
+        Throw "An error occured while restoring GitVersion.CommandLine ($GitVersionVersion) from NuGet."
     }
 }
 
@@ -117,6 +117,18 @@ $Arguments = @{
 }.GetEnumerator() | %{"--{0}=`"{1}`"" -f $_.key, $_.value };
 
 # Start Cake
-Write-Host "Running build script..."
-Invoke-Expression "& dotnet `"$CakePath`" `"build.cake`" $Arguments $ScriptArgs"
-exit $LASTEXITCODE
+Push-Location
+cd build
+Write-Host "Restoring packages..."
+Invoke-Expression "& dotnet restore --verbosity error"
+if($LASTEXITCODE -ne 0) {
+    Pop-Location;
+    exit $LASTEXITCODE;
+}
+Write-Host "Running build..."
+Invoke-Expression "& dotnet run -- -v=d -w=`"$PSScriptRoot`" -t=`"$Target`""
+if($LASTEXITCODE -ne 0) {
+    Pop-Location;
+    exit $LASTEXITCODE;
+}
+Pop-Location
