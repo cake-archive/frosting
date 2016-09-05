@@ -12,7 +12,7 @@ in alpha, but more information, documentation and samples will be added soon.
 ## Table of Contents
 
 1. [Example](https://github.com/cake-build/frosting#example)
-2. [Acknowledgement](https://github.com/cake-build/frosting#documentation)
+2. [Acknowledgement](https://github.com/cake-build/frosting#acknowledgement)
 3. [License](https://github.com/cake-build/frosting#license)
 4. [Thanks](https://github.com/cake-build/frosting#thanks)
 5. [Code of Conduct](https://github.com/cake-build/frosting#code-of-conduct)
