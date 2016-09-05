@@ -1,5 +1,6 @@
 # Frosting
 
+[![AppVeyor branch](https://img.shields.io/appveyor/ci/cakebuild/frosting/develop.svg)](https://ci.appveyor.com/project/cakebuild/frosting/branch/develop) 
 [![MyGet](https://img.shields.io/myget/cake/vpre/Cake.Frosting.svg?label=myget)](https://www.myget.org/feed/cake/package/nuget/Cake.Frosting)
 
 A .NET Core host for Cake, that allows you to write your build scripts as a 
