@@ -1,5 +1,7 @@
 # Frosting
 
+[![MyGet](https://img.shields.io/myget/cake/vpre/Cake.Frosting.svg?label=myget)](https://www.myget.org/feed/cake/package/nuget/Cake.Frosting)
+
 A .NET Core host for Cake, that allows you to write your build scripts as a 
 portable console application (`netstandard1.0`). Frosting is currently 
 in alpha, but more information, documentation and samples will be added soon.
