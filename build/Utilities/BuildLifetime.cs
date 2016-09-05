@@ -35,8 +35,9 @@ public class BuildLifetime : FrostingLifetime<BuildContext>
         context.Projects = new Project[] 
         {
             new Project { Name = "Cake.Frosting", Path = "./src/Cake.Frosting/project.json", Publish = true },
+            new Project { Name = "Cake.Frosting.Testing" ,Path = "./src/Cake.Frosting.Testing/project.json" },
             new Project { Name = "Cake.Frosting.Tests" ,Path = "./src/Cake.Frosting.Tests/project.json" },
-            new Project { Name = "Sandbox", Path = "./src/Sandbox/project.json" },
+            new Project { Name = "Cake.Frosting.Sandbox", Path = "./src/Cake.Frosting.Sandbox/project.json" },
             new Project { Name = "Cake.Frosting.Cli", Path = "./src/Cake.Frosting.Cli/project.json", Publish = true }
         };
 
