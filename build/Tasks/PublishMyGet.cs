@@ -28,8 +28,8 @@ public class PublishMyGet : FrostingTask<BuildContext>
                 var root = project.Path.GetDirectory();
                 var packageVersion = string.Concat(context.Version, "-", context.Suffix).Trim('-');
                 var files = new[] {
-                    root.FullPath + "/bin/Release/" + project.Name + "." + packageVersion + ".nupkg",
-                    root.FullPath + "/bin/Release/" + project.Name + "." + packageVersion + ".symbols.nupkg"
+                    $"{root.FullPath}/bin/{context.Configuration}/{project.Name}.{packageVersion}.nupkg",
+                    $"{root.FullPath}/bin/{context.Configuration}/{project.Name}.{packageVersion}.symbols.nupkg"
                 };
 
                 foreach(var file in files) 

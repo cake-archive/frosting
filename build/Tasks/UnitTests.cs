@@ -8,7 +8,7 @@ public class UnitTests : FrostingTask<BuildContext>
     public override void Run(BuildContext context)
     {
         context.DotNetCoreTest("./src/Cake.Frosting.Tests", new DotNetCoreTestSettings {
-            Configuration = "Release",
+            Configuration = context.Configuration,
             NoBuild = true,
             Verbose = false
         });

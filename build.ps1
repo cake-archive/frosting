@@ -110,6 +110,7 @@ if (!(Test-Path $GitVersionPath)) {
 
 # Build the argument list.
 $Arguments = @{
+    working=$PSScriptRoot
     target=$Target;
     configuration=$Configuration;
     verbosity=$Verbosity;
@@ -126,7 +127,7 @@ if($LASTEXITCODE -ne 0) {
     exit $LASTEXITCODE;
 }
 Write-Host "Running build..."
-Invoke-Expression "& dotnet run -- -v=d -w=`"$PSScriptRoot`" -t=`"$Target`""
+Invoke-Expression "& dotnet run -- $Arguments"
 if($LASTEXITCODE -ne 0) {
     Pop-Location;
     exit $LASTEXITCODE;

@@ -14,7 +14,7 @@ public class Package : FrostingTask<BuildContext>
             {
                 context.Information("Packing {0}...", project.Name);
                 context.DotNetCorePack(project.Path.FullPath, new DotNetCorePackSettings(){
-                    Configuration = "Release",
+                    Configuration = context.Configuration,
                     VersionSuffix = context.Suffix,
                     NoBuild = true,
                     Verbose = false

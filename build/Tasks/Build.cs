@@ -12,7 +12,7 @@ public class Build : FrostingTask<BuildContext>
         {
             context.Information("Building {0}...", project.Name);
             context.DotNetCoreBuild(project.Path.FullPath, new DotNetCoreBuildSettings(){
-                Configuration = "Release",
+                Configuration = context.Configuration,
                 VersionSuffix = context.Suffix
             });
         }
