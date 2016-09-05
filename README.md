@@ -144,7 +144,7 @@ the [ASP.NET Core hosting API](https://github.com/aspnet/Hosting).
 
 ## License
 
-Copyright © [.NET Foundation](http://dotnetfoundation.org/) and contributors.
+Copyright © [.NET Foundation](http://dotnetfoundation.org/) and contributors.  
 Frosting is provided as-is under the MIT license. For more information see 
 [LICENSE](https://github.com/cake-build/frosting/blob/develop/LICENSE).
 
