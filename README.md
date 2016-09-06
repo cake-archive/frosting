@@ -48,7 +48,7 @@ you will get.
     "emitEntryPoint": true
   },
   "dependencies": {
-    "Cake.Frosting": "0.1.0-alpha0007",
+    "Cake.Frosting": "0.1.0-alpha0008",
     "Microsoft.NETCore.App": {
       "type": "platform",
       "version": "1.0.0"
@@ -85,6 +85,9 @@ public class Program
             {
                 // Use a custom settings class.
                 services.UseContext<MySettings>();
+
+                // Use a custom lifetime to initialize the context.
+                services.UseLifetime<MyLifetime>();
             })
             .Build();
 
@@ -100,9 +103,18 @@ public class MySettings : FrostingContext
     public MySettings(ICakeContext context)
         : base(context)
     {
-        // You could also use a CakeLifeTime<Settings>
-        // to provide a Setup method to setup the context.
-        Magic = context.Arguments.HasArgument("magic");
+        // You could initialize the context here,
+        // but it's recommended to use a FrostingLifetime
+        // since the context will be created when running
+        // a dry run of the script as well.
+    }
+}
+
+public class MyLifetime : FrostingLifetime<MySettings>
+{
+    public override void Setup(MySettings context)
+    {
+        context.Magic = context.Arguments.HasArgument("magic");
     }
 }
 
@@ -124,7 +136,7 @@ public class Build : FrostingTask<MySettings>
 [Dependency(typeof(Build))]
 public class Default : FrostingTask
 {
-    // If you don't inherit from the generic task
+    // If you don't inherit from FrostinTask<MySettings>
     // the standard ICakeContext will be provided.
 }
 ``` 
