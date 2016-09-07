@@ -7,6 +7,8 @@ using Cake.Common.Tools.GitVersion;
 using System.Text;
 using Cake.Core;
 using Cake.Core.Diagnostics;
+using Cake.Common.Tools.DotNetCore;
+using Cake.Common.Tools.DotNetCore.Restore;
 
 public class BuildLifetime : FrostingLifetime<BuildContext>
 {
@@ -32,7 +34,7 @@ public class BuildLifetime : FrostingLifetime<BuildContext>
         context.ForcePublish = context.Argument<bool>("forcepublish", false);
 
         // Setup projects.
-        context.Projects = new Project[] 
+        context.Projects = new Project[]
         {
             new Project { Name = "Cake.Frosting", Path = "./src/Cake.Frosting/project.json", Publish = true },
             new Project { Name = "Cake.Frosting.Testing" ,Path = "./src/Cake.Frosting.Testing/project.json" },
@@ -40,6 +42,17 @@ public class BuildLifetime : FrostingLifetime<BuildContext>
             new Project { Name = "Cake.Frosting.Sandbox", Path = "./src/Cake.Frosting.Sandbox/project.json" },
             new Project { Name = "Cake.Frosting.Cli", Path = "./src/Cake.Frosting.Cli/project.json", Publish = true }
         };
+
+        // Install tools
+        context.Information("Installing tools...");
+        context.DotNetCoreRestore("./build/tools.project.json", new DotNetCoreRestoreSettings
+        {
+            PackagesDirectory = "./tools",
+            Verbosity = DotNetCoreRestoreVerbosity.Error,
+            Sources = new[] {
+                "https://api.nuget.org/v3/index.json"
+            }
+        });
 
         // Calculate semantic version.
         var info = GetVersion(context);
@@ -68,7 +81,7 @@ public class BuildLifetime : FrostingLifetime<BuildContext>
                     OutputType = GitVersionOutput.BuildServer
                 });
             }
-            
+
             GitVersion assertedVersions = context.GitVersion(new GitVersionSettings
             {
                 OutputType = GitVersionOutput.Json
@@ -80,11 +93,11 @@ public class BuildLifetime : FrostingLifetime<BuildContext>
         if (string.IsNullOrEmpty(version) || string.IsNullOrEmpty(semVersion))
         {
             context.Information("Fetching verson from first project.json...");
-            foreach(var project in context.Projects) 
+            foreach (var project in context.Projects)
             {
                 var content = System.IO.File.ReadAllText(project.Path.FullPath, Encoding.UTF8);
                 var node = Newtonsoft.Json.Linq.JObject.Parse(content);
-                if(node["version"] != null) 
+                if (node["version"] != null)
                 {
                     version = node["version"].ToString().Replace("-*", "");
                 }
@@ -92,7 +105,7 @@ public class BuildLifetime : FrostingLifetime<BuildContext>
             semVersion = version;
         }
 
-        if(string.IsNullOrWhiteSpace(version))
+        if (string.IsNullOrWhiteSpace(version))
         {
             throw new CakeException("Could not calculate version of build.");
         }
@@ -109,7 +122,7 @@ public class BuildLifetime : FrostingLifetime<BuildContext>
     private static string GetEnvironmentValueOrArgument(BuildContext context, string environmentVariable, string argumentName)
     {
         var arg = context.EnvironmentVariable(environmentVariable);
-        if(string.IsNullOrWhiteSpace(arg))
+        if (string.IsNullOrWhiteSpace(arg))
         {
             arg = context.Argument<string>(argumentName, null);
         }

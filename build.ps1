@@ -91,20 +91,6 @@ if (!(Test-Path $NugetPath)) {
 }
 
 ###########################################################################
-# INSTALL TOOLS
-###########################################################################
-
-$GitVersionVersion = "3.6.2"
-$GitVersionPath = Join-Path $ToolPath "GitVersion.CommandLine.$GitVersionVersion/Cake.dll"
-if (!(Test-Path $GitVersionPath)) {
-    Write-Host "Installing GitVersion..."
-    Invoke-Expression "&`"$NugetPath`" install GitVersion.CommandLine -Version $GitVersionVersion -OutputDirectory `"$ToolPath`"" | Out-Null;
-    if ($LASTEXITCODE -ne 0) {
-        Throw "An error occured while restoring GitVersion.CommandLine ($GitVersionVersion) from NuGet."
-    }
-}
-
-###########################################################################
 # RUN BUILD SCRIPT
 ###########################################################################
 
@@ -121,7 +107,7 @@ $Arguments = @{
 Push-Location
 cd build
 Write-Host "Restoring packages..."
-Invoke-Expression "& dotnet restore --verbosity error"
+Invoke-Expression "& dotnet restore ./project.json --verbosity error"
 if($LASTEXITCODE -ne 0) {
     Pop-Location;
     exit $LASTEXITCODE;
