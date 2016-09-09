@@ -7,6 +7,12 @@ using Cake.Frosting;
 [Dependency(typeof(Package))]
 public class PublishMyGet : FrostingTask<BuildContext>
 {
+    public override bool ShouldRun(BuildContext context)
+    {
+        return !context.IsLocalBuild && !context.IsPullRequest && context.IsOriginalRepo 
+            && (context.IsTagged || !context.IsMasterBranch);
+    }
+
     public override void Run(BuildContext context)
     {
         if(context.MyGetSource == null)
