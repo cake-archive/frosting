@@ -19,5 +19,6 @@ public class Program : IFrostingStartup
     {
         services.UseContext<BuildContext>();
         services.UseLifetime<BuildLifetime>();
+        services.UseWorkingDirectory("./..");
     }
 }

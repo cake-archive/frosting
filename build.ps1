@@ -96,7 +96,6 @@ if (!(Test-Path $NugetPath)) {
 
 # Build the argument list.
 $Arguments = @{
-    working=$PSScriptRoot
     target=$Target;
     configuration=$Configuration;
     verbosity=$Verbosity;
@@ -107,13 +106,13 @@ $Arguments = @{
 Push-Location
 cd build
 Write-Host "Restoring packages..."
-Invoke-Expression "& dotnet restore ./project.json --verbosity error"
+Invoke-Expression "dotnet restore ./project.json --verbosity error"
 if($LASTEXITCODE -ne 0) {
     Pop-Location;
     exit $LASTEXITCODE;
 }
 Write-Host "Running build..."
-Invoke-Expression "& dotnet run -- $Arguments"
+Invoke-Expression "dotnet run -- $Arguments"
 if($LASTEXITCODE -ne 0) {
     Pop-Location;
     exit $LASTEXITCODE;
