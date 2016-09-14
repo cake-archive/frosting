@@ -48,7 +48,7 @@ you will get.
     "emitEntryPoint": true
   },
   "dependencies": {
-    "Cake.Frosting": "0.1.0-alpha0008",
+    "Cake.Frosting": "0.1.0-alpha0030",
     "Microsoft.NETCore.App": {
       "type": "platform",
       "version": "1.0.0"
