@@ -58,6 +58,9 @@ you will get.
     "netcoreapp1.0": {
       "imports": "dnxcore50"
     }
+  },
+  "tools": {
+    "Cake.Frosting.CLI": "0.1.0-alpha0030"
   }
 }
 ```
@@ -88,6 +91,9 @@ public class Program
 
                 // Use a custom lifetime to initialize the context.
                 services.UseLifetime<MyLifetime>();
+
+                // Use the parent directory as the working directory.
+                services.UseWorkingDirectory("..");
             })
             .Build();
 
@@ -150,6 +156,14 @@ we use `--` to separate the arguments to the `dotnet` command.
 ```powershell
 > dotnet restore
 > dotnet run -- --magic
+```
+
+Or, if you want to use the .NET CLI tool, you can run your build
+using the following commands.
+
+```
+> dotnet restore
+> dotnet cake --magic
 ```
 
 ## Acknowledgement
