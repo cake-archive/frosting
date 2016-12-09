@@ -327,5 +327,20 @@ namespace Cake.Frosting.Tests.Unit
             // Then
             Assert.Equal(0, result);
         }
+
+        [Fact]
+        public void Should_Execute_OnError_Method_If_Run_Failed()
+        {
+            // Given
+            var fixture = new CakeHostBuilderFixture();
+            fixture.RegisterTask<OnErrorTask>();
+            fixture.Options.Target = "On-Error";
+
+            // When
+            fixture.Run();
+
+            // Then
+            fixture.Log.Received(1).Error("On test exception");
+        }
     }
 }
