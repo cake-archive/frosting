@@ -9,7 +9,7 @@ using Cake.Core.Diagnostics;
 namespace Cake.Frosting.Tests.Data.Tasks
 {
     [TaskName("On-Error-Run-Completed")]
-    public class OnErrorRunCompletedTask : FrostingTask<ICakeContext>
+    public sealed class OnErrorRunCompletedTask : FrostingTask<ICakeContext>
     {
         public override void Run(ICakeContext context)
         {

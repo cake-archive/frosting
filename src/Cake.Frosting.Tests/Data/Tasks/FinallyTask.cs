@@ -9,7 +9,7 @@ using Cake.Core.Diagnostics;
 namespace Cake.Frosting.Tests.Data.Tasks
 {
     [TaskName("Finally")]
-    public class FinallyTask : FrostingTask<ICakeContext>
+    public sealed class FinallyTask : FrostingTask<ICakeContext>
     {
         public override void Run(ICakeContext context)
         {
