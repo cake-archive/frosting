@@ -5,18 +5,27 @@ using Cake.Core;
 
 public class BuildVersion
 {
-    public string Version { get; private set; }
-    public string Suffix { get; private set; }
+    public string Prefix { get; set; }
+    public string Suffix { get; set; }
 
     public BuildVersion(string version, string suffix)
     {
-        Version = version;
+        Prefix = version;
         Suffix = suffix;
 
         if(string.IsNullOrWhiteSpace(Suffix))
         {
             Suffix = null;
         }
+    }
+
+    public string GetSemanticVersion()
+    {
+        if(!string.IsNullOrWhiteSpace(Suffix))
+        {
+            return string.Concat(Prefix, "-", "Suffix");
+        }
+        return Prefix;
     }
 
     public static BuildVersion Calculate(Context context)

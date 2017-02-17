@@ -29,12 +29,12 @@ public class Lifetime : FrostingLifetime<Context>
         ToolInstaller.Install(context, "GitVersion.CommandLine", "3.6.2");
 
         // Calculate semantic version.
-        var version = BuildVersion.Calculate(context);
-        context.Version = context.Argument<string>("version", version.Version);
-        context.Suffix = context.Argument<string>("suffix", version.Suffix);
+        context.Version = BuildVersion.Calculate(context);
+        context.Version.Prefix = context.Argument<string>("version", context.Version.Prefix);
+        context.Version.Suffix = context.Argument<string>("suffix", context.Version.Suffix);
 
         context.Information("Version: {0}", context.Version);
-        context.Information("Version suffix: {0}", context.Suffix);
+        context.Information("Version suffix: {0}", context.Version.Suffix);
         context.Information("Configuration: {0}", context.Configuration);
         context.Information("Target: {0}", context.Target);
         context.Information("AppVeyor: {0}", context.AppVeyor);
