@@ -26,7 +26,7 @@ public class PublishMyGet : FrostingTask<Context>
 
         // Get the file paths.
         var root = new DirectoryPath("./src/Cake.Frosting");
-        var packageVersion = string.Concat(context.Version, "-", context.Suffix).Trim('-');
+        var packageVersion = string.Concat(context.Version, "-", context.Version.Suffix).Trim('-');
         var files = new[] {
             $"{root.FullPath}/bin/{context.Configuration}/Cake.Frosting.{packageVersion}.nupkg",
             $"{root.FullPath}/bin/{context.Configuration}/Cake.Frosting.{packageVersion}.symbols.nupkg"

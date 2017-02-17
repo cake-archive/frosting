@@ -1,5 +1,6 @@
 using Cake.Common.Tools.DotNetCore;
 using Cake.Common.Tools.DotNetCore.Pack;
+using Cake.Core;
 using Cake.Core.IO;
 using Cake.Frosting;
 
@@ -11,9 +12,10 @@ public class Package : FrostingTask<Context>
         var path = new FilePath("./src/Cake.Frosting/Cake.Frosting.csproj");
         context.DotNetCorePack(path.FullPath, new DotNetCorePackSettings(){
             Configuration = context.Configuration,
-            VersionSuffix = context.Suffix,
+            VersionSuffix = context.Version.Suffix,
             NoBuild = true,
-            Verbose = false
+            Verbose = false,
+            ArgumentCustomization = args => args.Append("--include-symbols")
         });
     }
 }

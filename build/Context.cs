@@ -5,8 +5,7 @@ public class Context : FrostingContext
 {
     public string Target { get; set; }
     public string Configuration { get; set; }
-    public string Version { get; set; }
-    public string Suffix { get; set; }
+    public BuildVersion Version { get; set; }
 
     public string MyGetSource { get; set; }
     public string MyGetApiKey { get; set; }
