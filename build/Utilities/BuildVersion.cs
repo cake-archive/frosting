@@ -23,7 +23,7 @@ public class BuildVersion
     {
         if(!string.IsNullOrWhiteSpace(Suffix))
         {
-            return string.Concat(Prefix, "-", "Suffix");
+            return string.Concat(Prefix, "-", Suffix);
         }
         return Prefix;
     }
