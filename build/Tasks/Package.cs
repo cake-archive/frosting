@@ -15,7 +15,7 @@ public class Package : FrostingTask<Context>
             VersionSuffix = context.Version.Suffix,
             NoBuild = true,
             Verbose = false,
-            ArgumentCustomization = args => args.Append("--include-symbols")
+            ArgumentCustomization = args => args.Append("--include-symbols --include-source")
         });
     }
 }
