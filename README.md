@@ -20,9 +20,9 @@ in alpha, but more information, documentation and samples will be added soon.
 
 ## Example
 
-### 1. Add nuget.config
+### 1. Add NuGet.Config
 
-Start by adding a `nuget.config` file to your project.  
+Start by adding a `NuGet.Config` file to your project.  
 The reason for this is that Cake.Frosting is in preview at the moment and not
 available on [nuget.org](https://nuget.org).
 
@@ -35,32 +35,37 @@ available on [nuget.org](https://nuget.org).
 </configuration>
 ```
 
-### 2. Add project.json
+### 2. Add Build.csproj
 
-Now create a `project.json` file that will tell `dotnet` what dependencies are required
+Now create a `Build.csproj` file that will tell `dotnet` what dependencies are required
 to build our program. The `Cake.Frosting` package will decide what version of `Cake.Core` and `Cake.Common`
 you will get.
 
+```xml
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp1.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Cake.Frosting" Version="0.1.0-alpha0034" />
+  </ItemGroup>
+
+</Project>
+
+```
+
+### 3. Add global.json
+
+To make sure that we use the correct version of the .NET Core SDK when Building
+and running our build script, we will need to add a `global.json`.
+
 ```json
 {
-  "version": "0.1.0-*",
-  "buildOptions": {
-    "emitEntryPoint": true
-  },
-  "dependencies": {
-    "Cake.Frosting": "0.1.0-alpha0034",
-    "Microsoft.NETCore.App": {
-      "type": "platform",
-      "version": "1.0.0"
-    }
-  },
-  "frameworks": {
-    "netcoreapp1.0": {
-      "imports": "dnxcore50"
-    }
-  },
-  "tools": {
-    "Cake.Frosting.CLI": "0.1.0-alpha0034"
+  "sdk": {
+    "version": "1.0.0-rc4-004771"
   }
 }
 ```
@@ -158,13 +163,20 @@ we use `--` to separate the arguments to the `dotnet` command.
 > dotnet run -- --magic
 ```
 
-Or, if you want to use the .NET CLI tool, you can run your build
-using the following commands.
+**NOTE:** You're not supposed to commit the produced binaries to your repository.  
+The above command is what you're expected to run from your bootstrapper.
 
-```
-> dotnet restore
-> dotnet cake --magic
-```
+## Building from source
+
+### .NET Core SDK
+
+To build from source, you will need to have 
+[.NET Core SDK 1.0 rc4 build 004771](https://github.com/dotnet/core/blob/master/release-notes/rc4-download.md)
+installed on your machine.
+
+### Visual Studio (optional)
+
+If you want to develop using Visual Studio, then you need to use Visual Studio 2017 RC 4 or higher.
 
 ## Acknowledgement
 
@@ -176,8 +188,6 @@ the [ASP.NET Core hosting API](https://github.com/aspnet/Hosting).
 Copyright © [.NET Foundation](http://dotnetfoundation.org/) and contributors.  
 Frosting is provided as-is under the MIT license. For more information see 
 [LICENSE](https://github.com/cake-build/frosting/blob/develop/LICENSE).
-
-* For Autofac, see https://github.com/autofac/Autofac/blob/master/LICENSE
 
 ## Thanks
 

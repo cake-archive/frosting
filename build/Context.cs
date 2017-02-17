@@ -1,7 +1,7 @@
 using Cake.Core;
 using Cake.Frosting;
 
-public class BuildContext : FrostingContext
+public class Context : FrostingContext
 {
     public string Target { get; set; }
     public string Configuration { get; set; }
@@ -19,9 +19,8 @@ public class BuildContext : FrostingContext
     public bool ForcePublish { get; set; }
 
     public bool AppVeyor { get; set; }
-    public Project[] Projects { get; set; }
 
-    public BuildContext(ICakeContext context)
+    public Context(ICakeContext context)
         : base(context)
     {
     }

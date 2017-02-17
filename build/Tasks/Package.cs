@@ -1,25 +1,19 @@
-using Cake.Common.Diagnostics;
 using Cake.Common.Tools.DotNetCore;
 using Cake.Common.Tools.DotNetCore.Pack;
+using Cake.Core.IO;
 using Cake.Frosting;
 
 [Dependency(typeof(UnitTests))]
-public class Package : FrostingTask<BuildContext>
+public class Package : FrostingTask<Context>
 {
-    public override void Run(BuildContext context)
+    public override void Run(Context context)
     {
-        foreach(var project in context.Projects)
-        {
-            if(project.Publish) 
-            {
-                context.Information("Packing {0}...", project.Name);
-                context.DotNetCorePack(project.Path.FullPath, new DotNetCorePackSettings(){
-                    Configuration = context.Configuration,
-                    VersionSuffix = context.Suffix,
-                    NoBuild = true,
-                    Verbose = false
-                });
-            }
-        }
+        var path = new FilePath("./src/Cake.Frosting/Cake.Frosting.csproj");
+        context.DotNetCorePack(path.FullPath, new DotNetCorePackSettings(){
+            Configuration = context.Configuration,
+            VersionSuffix = context.Suffix,
+            NoBuild = true,
+            Verbose = false
+        });
     }
 }

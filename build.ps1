@@ -31,10 +31,9 @@ Param(
     [string[]]$ScriptArgs
 )
 
-$CakeVersion = "0.16.0-alpha0025"
 $DotNetChannel = "preview";
-$DotNetVersion = "1.0.0-preview2-003121";
-$DotNetInstallerUri = "https://raw.githubusercontent.com/dotnet/cli/rel/1.0.0-preview2/scripts/obtain/dotnet-install.ps1";
+$DotNetVersion = "1.0.0-rc4-004771";
+$DotNetInstallerUri = "https://raw.githubusercontent.com/dotnet/cli/rel/1.0.0/scripts/obtain/dotnet-install.ps1";
 $NugetUrl = "https://dist.nuget.org/win-x86-commandline/latest/nuget.exe"
 
 # Make sure tools folder exists
@@ -104,9 +103,9 @@ $Arguments = @{
 
 # Start Cake
 Push-Location
-cd build
+Set-Location build
 Write-Host "Restoring packages..."
-Invoke-Expression "dotnet restore ./project.json --verbosity error"
+Invoke-Expression "dotnet restore"
 if($LASTEXITCODE -ne 0) {
     Pop-Location;
     exit $LASTEXITCODE;

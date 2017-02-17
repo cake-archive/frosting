@@ -1,4 +1,4 @@
-using Cake.Core;
+﻿using Cake.Core;
 using Cake.Frosting;
 
 public class Program : IFrostingStartup
@@ -17,8 +17,8 @@ public class Program : IFrostingStartup
 
     public void Configure(ICakeServices services)
     {
-        services.UseContext<BuildContext>();
-        services.UseLifetime<BuildLifetime>();
+        services.UseContext<Context>();
+        services.UseLifetime<Lifetime>();
         services.UseWorkingDirectory("..");
     }
 }
