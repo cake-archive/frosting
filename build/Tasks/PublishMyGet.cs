@@ -1,19 +1,19 @@
-using Cake.Common.Diagnostics;
 using Cake.Common.Tools.NuGet;
 using Cake.Common.Tools.NuGet.Push;
 using Cake.Core;
+using Cake.Core.IO;
 using Cake.Frosting;
 
 [Dependency(typeof(Package))]
-public class PublishMyGet : FrostingTask<BuildContext>
+public class PublishMyGet : FrostingTask<Context>
 {
-    public override bool ShouldRun(BuildContext context)
+    public override bool ShouldRun(Context context)
     {
         return !context.IsLocalBuild && !context.IsPullRequest && context.IsOriginalRepo 
             && (context.IsTagged || !context.IsMasterBranch);
     }
 
-    public override void Run(BuildContext context)
+    public override void Run(Context context)
     {
         if(context.MyGetSource == null)
         {
@@ -24,28 +24,21 @@ public class PublishMyGet : FrostingTask<BuildContext>
             throw new CakeException("MyGet API key was not provided.");
         }
 
-        foreach(var project in context.Projects)
-        {
-            if(project.Publish) 
-            {
-                context.Information("Publishing {0} to MyGet...", project.Name);
-                
-                // Get the file paths.
-                var root = project.Path.GetDirectory();
-                var packageVersion = string.Concat(context.Version, "-", context.Suffix).Trim('-');
-                var files = new[] {
-                    $"{root.FullPath}/bin/{context.Configuration}/{project.Name}.{packageVersion}.nupkg",
-                    $"{root.FullPath}/bin/{context.Configuration}/{project.Name}.{packageVersion}.symbols.nupkg"
-                };
+        // Get the file paths.
+        var root = new DirectoryPath("./src/Cake.Frosting");
+        var packageVersion = string.Concat(context.Version, "-", context.Suffix).Trim('-');
+        var files = new[] {
+            $"{root.FullPath}/bin/{context.Configuration}/Cake.Frosting.{packageVersion}.nupkg",
+            $"{root.FullPath}/bin/{context.Configuration}/Cake.Frosting.{packageVersion}.symbols.nupkg"
+        };
 
-                foreach(var file in files) 
-                {
-                    context.NuGetPush(file, new NuGetPushSettings() {
-                        Source = context.MyGetSource,
-                        ApiKey = context.MyGetApiKey
-                    });
-                }
-            }
+        // Push files
+        foreach(var file in files) 
+        {
+            context.NuGetPush(file, new NuGetPushSettings() {
+                Source = context.MyGetSource,
+                ApiKey = context.MyGetApiKey
+            });
         }
     }
 }
