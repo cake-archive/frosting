@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-This is a Powershell script to bootstrap a Cake build.
+This is a Powershell script to bootstrap a Cake.Frosting build.
 .DESCRIPTION
 This Powershell script will download NuGet if missing, restore NuGet tools (including Cake)
 and execute your Cake build script with the parameters you provide.
@@ -16,7 +16,7 @@ No tasks will be executed.
 .PARAMETER ScriptArgs
 Remaining arguments are added here.
 .LINK
-http://cakebuild.net
+https://github.com/cake-build/frosting
 #>
 
 [CmdletBinding()]

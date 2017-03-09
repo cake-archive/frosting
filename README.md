@@ -4,7 +4,7 @@
 [![MyGet](https://img.shields.io/myget/cake/vpre/Cake.Frosting.svg?label=myget)](https://www.myget.org/feed/cake/package/nuget/Cake.Frosting)
 
 A .NET Core host for Cake, that allows you to write your build scripts as a 
-portable console application (`netstandard1.0`). Frosting is currently 
+portable console application (`netcoreapp1.1`). Frosting is currently 
 in alpha, but more information, documentation and samples will be added soon.
 
 **Expect things to move around initially. Especially naming of things.**
@@ -20,7 +20,33 @@ in alpha, but more information, documentation and samples will be added soon.
 
 ## Example
 
-### 1. Add NuGet.Config
+### 1. Download bootstrapper script
+
+To easily run our build script, run the following command in the root of your repository.
+
+```powershell
+Invoke-WebRequest https://raw.githubusercontent.com/cake-build/frosting/develop/res/bootstrapper.ps1 -OutFile build.ps1
+```
+
+### 2. Create build directory
+
+Create a new directory called `build` in the root of your repository.
+This is where we will put all the build script related files.
+
+### 3. Add global.json
+
+To make sure that we use the correct version of the .NET Core SDK when Building
+and running our build script, we will need to add a `global.json`.
+
+```json
+{
+  "sdk": {
+    "version": "1.0.1"
+  }
+}
+```
+
+### 4. Add NuGet.Config
 
 Start by adding a `NuGet.Config` file to your project.  
 The reason for this is that Cake.Frosting is in preview at the moment and not
@@ -35,7 +61,7 @@ available on [nuget.org](https://nuget.org).
 </configuration>
 ```
 
-### 2. Add Build.csproj
+### 5. Add Build.csproj
 
 Now create a `Build.csproj` file that will tell `dotnet` what dependencies are required
 to build our program. The `Cake.Frosting` package will decide what version of `Cake.Core` and `Cake.Common`
@@ -57,20 +83,7 @@ you will get.
 
 ```
 
-### 3. Add global.json
-
-To make sure that we use the correct version of the .NET Core SDK when Building
-and running our build script, we will need to add a `global.json`.
-
-```json
-{
-  "sdk": {
-    "version": "1.0.0-rc4-004771"
-  }
-}
-```
-
-### 3. Add Program.cs
+### 6. Add Program.cs
 
 For the sake of keeping the example simple, all classes are listed after each other, 
 but you should of course treat the source code of your build scripts like any other
@@ -152,7 +165,7 @@ public class Default : FrostingTask
 }
 ``` 
 
-### 4. Run it!
+### 7. Run it!
 
 To execute the build, simply run it like any .NET Core application.  
 In the example we provide the custom `--magic` argument. Notice that
@@ -163,6 +176,12 @@ we use `--` to separate the arguments to the `dotnet` command.
 > dotnet run -- --magic
 ```
 
+You can also run your script by using the bootstrapper script that we downloaded in the first step.
+
+```powershell
+> ./build.ps1 --magic
+```
+
 **NOTE:** You're not supposed to commit the produced binaries to your repository.  
 The above command is what you're expected to run from your bootstrapper.
 
@@ -171,7 +190,7 @@ The above command is what you're expected to run from your bootstrapper.
 ### .NET Core SDK
 
 To build from source, you will need to have 
-[.NET Core SDK 1.0 rc4 build 004771](https://github.com/dotnet/core/blob/master/release-notes/rc4-download.md)
+[.NET Core SDK 1.0.1](https://www.microsoft.com/net/download/core)
 installed on your machine.
 
 ### Visual Studio (optional)
