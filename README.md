@@ -4,7 +4,7 @@
 [![MyGet](https://img.shields.io/myget/cake/vpre/Cake.Frosting.svg?label=myget)](https://www.myget.org/feed/cake/package/nuget/Cake.Frosting)
 
 A .NET Core host for Cake, that allows you to write your build scripts as a 
-portable console application (`netstandard1.0`). Frosting is currently 
+portable console application (`netcoreapp1.1`). Frosting is currently 
 in alpha, but more information, documentation and samples will be added soon.
 
 **Expect things to move around initially. Especially naming of things.**
@@ -65,7 +65,7 @@ and running our build script, we will need to add a `global.json`.
 ```json
 {
   "sdk": {
-    "version": "1.0.0-rc4-004771"
+    "version": "1.0.1"
   }
 }
 ```
@@ -171,7 +171,7 @@ The above command is what you're expected to run from your bootstrapper.
 ### .NET Core SDK
 
 To build from source, you will need to have 
-[.NET Core SDK 1.0 rc4 build 004771](https://github.com/dotnet/core/blob/master/release-notes/rc4-download.md)
+[.NET Core SDK 1.0.1](https://www.microsoft.com/net/download/core)
 installed on your machine.
 
 ### Visual Studio (optional)
