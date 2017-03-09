@@ -76,7 +76,7 @@ you will get.
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Cake.Frosting" Version="0.1.0-alpha0034" />
+    <PackageReference Include="Cake.Frosting" Version="0.1.0-alpha0056" />
   </ItemGroup>
 
 </Project>
