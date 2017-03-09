@@ -3,7 +3,14 @@
     <metadata>
         <id>Cake.Frosting.Template</id>
         <description>Cake.Frosting templates for the .NET SDK.</description>
-        <authors>Patrik Svensson (patrik@patriksvensson.se)</authors>
+        <summary>Cake (C# Make) is a build automation system with a C# DSL to do things like compiling code, copy files/folders, running unit tests, compress files and build NuGet packages.</summary>
+        <authors>Patrik Svensson, Mattias Karlsson, Gary Ewan Park and contributors</authors>
+        <licenseUrl>https://github.com/cake-build/frosting/blob/develop/LICENSE</licenseUrl>
+        <projectUrl>https://github.com/cake-build/frosting</projectUrl>
+        <iconUrl>https://raw.githubusercontent.com/cake-build/graphics/master/png/cake-medium.png</iconUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <copyright>Copyright (c) .NET Foundation and contributors</copyright>
+        <tags>Cake Script Build</tags>
         <packageTypes>
             <packageType name="Template" />
         </packageTypes>
