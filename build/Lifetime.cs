@@ -4,16 +4,21 @@ using Cake.Common.Diagnostics;
 using Cake.Common.Build;
 using Cake.Frosting;
 using Cake.Core.Diagnostics;
+using Cake.Core.IO;
 
 public class Lifetime : FrostingLifetime<Context>
 {
     public override void Setup(Context context)
     {
+        // Arguments
         context.Target = context.Argument<string>("target", "Default");
         context.Configuration = context.Argument<string>("configuration", "Release");
         context.ForcePublish = context.Argument<bool>("forcepublish", false);
         context.MyGetSource = GetEnvironmentValueOrArgument(context, "FROSTING_MYGET_SOURCE", "mygetsource");
         context.MyGetApiKey = GetEnvironmentValueOrArgument(context, "FROSTING_MYGET_API_KEY", "mygetapikey");
+
+        // Directories
+        context.Artifacts = new DirectoryPath("./artifacts");
 
         // Build system information.
         var buildSystem = context.BuildSystem();
