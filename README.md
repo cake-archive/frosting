@@ -20,166 +20,34 @@ in alpha, but more information, documentation and samples will be added soon.
 
 ## Example
 
-### 1. Download bootstrapper script
+### 1. Install .NET Core SDK 1.0.1 or later
 
-To easily run our build script, run the following command in the root of your repository.
+You can find the SDK at [https://www.microsoft.com/net/download/core](https://www.microsoft.com/net/download/core).
+
+### 2. Install the template
+
+Cake.Frosting is currently in preview, so you will have to specify the
+template version explicitly.
+
+```
+> dotnet new --install Cake.Frosting.Template::0.1.0-alpha0058
+```
+
+### 3. Create a new Frosting project
+
+Now it's time to create a new Frosting project.  
+Go to the repository where you want to add a new Frosting build script and run the following command:
+
+```
+> dotnet new cakefrosting
+```
+
+### 4. Profit
+
+Now you should be able to run your newly created builds script.  
 
 ```powershell
-Invoke-WebRequest https://raw.githubusercontent.com/cake-build/frosting/develop/template/build.ps1 -OutFile build.ps1
-```
-
-### 2. Create build directory
-
-Create a new directory called `build` in the root of your repository.
-This is where we will put all the build script related files.
-
-### 3. Add global.json
-
-To make sure that we use the correct version of the .NET Core SDK when Building
-and running our build script, we will need to add a `global.json`.
-
-```json
-{
-  "sdk": {
-    "version": "1.0.1"
-  }
-}
-```
-
-### 4. Add NuGet.Config
-
-Start by adding a `NuGet.Config` file to your project.  
-The reason for this is that Cake.Frosting is in preview at the moment and not
-available on [nuget.org](https://nuget.org).
-
-```xml
-<configuration>
-  <packageSources>
-    <add key="nuget.org" value="https://api.nuget.org/v3/index.json" protocolVersion="3" />
-    <add key="myget.org" value="https://www.myget.org/F/cake/api/v3/index.json" protocolVersion="3" />
-  </packageSources>
-</configuration>
-```
-
-### 5. Add Build.csproj
-
-Now create a `Build.csproj` file that will tell `dotnet` what dependencies are required
-to build our program. The `Cake.Frosting` package will decide what version of `Cake.Core` and `Cake.Common`
-you will get.
-
-```xml
-<Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp1.1</TargetFramework>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Cake.Frosting" Version="0.1.0-alpha0056" />
-  </ItemGroup>
-
-</Project>
-
-```
-
-### 6. Add Program.cs
-
-For the sake of keeping the example simple, all classes are listed after each other, 
-but you should of course treat the source code of your build scripts like any other
-code and divide them up in individual files.
-
-```csharp
-using Cake.Common.Diagnostics;
-using Cake.Core;
-using Cake.Core.Diagnostics;
-using Cake.Frosting;
-
-public class Program
-{
-    public static int Main(string[] args)
-    {
-        // Create the host.
-        var host = new CakeHostBuilder()
-            .WithArguments(args)
-            .ConfigureServices(services =>
-            {
-                // Use a custom settings class.
-                services.UseContext<MySettings>();
-
-                // Use a custom lifetime to initialize the context.
-                services.UseLifetime<MyLifetime>();
-
-                // Use the parent directory as the working directory.
-                services.UseWorkingDirectory("..");
-            })
-            .Build();
-
-        // Run the host.
-        return host.Run();
-    }
-}
-
-public class MySettings : FrostingContext
-{
-    public bool Magic { get; set; }
-
-    public MySettings(ICakeContext context)
-        : base(context)
-    {
-        // You could initialize the context here,
-        // but it's recommended to use a FrostingLifetime
-        // since the context will be created when running
-        // a dry run of the script as well.
-    }
-}
-
-public class MyLifetime : FrostingLifetime<MySettings>
-{
-    public override void Setup(MySettings context)
-    {
-        context.Magic = context.Arguments.HasArgument("magic");
-    }
-}
-
-[TaskName("Provide-Another-Name-Like-This")]
-public class Build : FrostingTask<MySettings>
-{
-    public override bool ShouldRun(MySettings context)
-    {
-        // Don't run this task on OSX.
-        return context.Environment.Platform.Family != PlatformFamily.OSX;
-    }
-
-    public override void Run(MySettings context)
-    {
-        context.Information("Magic: {0}", context.Magic);
-    }
-}
-
-[Dependency(typeof(Build))]
-public class Default : FrostingTask
-{
-    // If you don't inherit from FrostinTask<MySettings>
-    // the standard ICakeContext will be provided.
-}
-``` 
-
-### 7. Run it!
-
-To execute the build, simply run it like any .NET Core application.  
-In the example we provide the custom `--magic` argument. Notice that
-we use `--` to separate the arguments to the `dotnet` command.
-
-```powershell
-> dotnet restore
-> dotnet run -- --magic
-```
-
-You can also run your script by using the bootstrapper script that we downloaded in the first step.
-
-```powershell
-> ./build.ps1 --magic
+> ./build.ps1
 ```
 
 **NOTE:** You're not supposed to commit the produced binaries to your repository.  
@@ -193,9 +61,9 @@ To build from source, you will need to have
 [.NET Core SDK 1.0.1](https://www.microsoft.com/net/download/core)
 installed on your machine.
 
-### Visual Studio (optional)
+### Visual Studio 2017 (optional)
 
-If you want to develop using Visual Studio, then you need to use Visual Studio 2017 RC 4 or higher.
+If you want to develop using Visual Studio, then you need to use Visual Studio 2017 or higher.
 
 ## Acknowledgement
 
