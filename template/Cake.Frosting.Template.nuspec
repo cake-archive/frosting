@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <metadata>
+        <id>Cake.Frosting.Template</id>
+        <description>Cake.Frosting templates for the .NET SDK.</description>
+        <authors>Patrik Svensson (patrik@patriksvensson.se)</authors>
+        <packageTypes>
+            <packageType name="Template" />
+        </packageTypes>
+    </metadata>
+    <files>
+        <file src=".template.config/template.json" target="content/.template.config" />
+        <file src="build.ps1" target="content/build.ps1" />
+        <file src="Build.csproj" target="content/build" />
+        <file src="NuGet.config" target="content/build" />
+        <file src="Program.cs" target="content/build" />
+        <file src="Context.cs" target="content/build" />
+        <file src="Lifetime.cs" target="content/build" />
+        <file src="Tasks/Default.cs" target="content/build/Tasks" />
+        <file src="Tasks/Hello.cs" target="content/build/Tasks" />
+    </files>
+</package>

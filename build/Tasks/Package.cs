@@ -5,6 +5,7 @@ using Cake.Core.IO;
 using Cake.Frosting;
 
 [Dependency(typeof(UnitTests))]
+[Dependency(typeof(PackageTemplate))]
 public class Package : FrostingTask<Context>
 {
     public override void Run(Context context)
@@ -15,6 +16,7 @@ public class Package : FrostingTask<Context>
             VersionSuffix = context.Version.Suffix,
             NoBuild = true,
             Verbose = false,
+            OutputDirectory = context.Artifacts,
             ArgumentCustomization = args => args.Append("--include-symbols --include-source")
         });
     }

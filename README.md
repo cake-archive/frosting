@@ -25,7 +25,7 @@ in alpha, but more information, documentation and samples will be added soon.
 To easily run our build script, run the following command in the root of your repository.
 
 ```powershell
-Invoke-WebRequest https://raw.githubusercontent.com/cake-build/frosting/develop/res/bootstrapper.ps1 -OutFile build.ps1
+Invoke-WebRequest https://raw.githubusercontent.com/cake-build/frosting/develop/template/build.ps1 -OutFile build.ps1
 ```
 
 ### 2. Create build directory
