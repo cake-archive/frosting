@@ -1,11 +1,9 @@
 # Misc folders
 [Bb]in/
 [Oo]bj/
-[Tt]emp/
-[Ll]ib/
-[Pp]ackages/
 /[Aa]rtifacts/
 /[Tt]ools/
+/template/[Tt]ools/
 
 # .NET Core CLI
 /.dotnet/
