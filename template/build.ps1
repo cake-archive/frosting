@@ -98,21 +98,23 @@ $Arguments = @{
     configuration=$Configuration;
     verbosity=$Verbosity;
     dryrun=$WhatIf;
-}.GetEnumerator() | %{"--{0}=`"{1}`"" -f $_.key, $_.value };
+}.GetEnumerator() | ForEach-Object { "--{0}=`"{1}`"" -f $_.key, $_.value };
 
-# Start Cake
-Push-Location
-Set-Location build
-Write-Host "Restoring packages..."
-Invoke-Expression "dotnet restore"
-if($LASTEXITCODE -ne 0) {
-    Pop-Location;
+try {
+    Push-Location
+    Set-Location build
+    Write-Host "Restoring packages..."
+    Invoke-Expression "dotnet restore"
+    if($LASTEXITCODE -eq 0) {
+        Write-Output "Compiling build..."
+        Invoke-Expression "dotnet publish -c Debug /v:q /nologo"
+        if($LASTEXITCODE -eq 0) {
+            Write-Output "Running build..."
+            Invoke-Expression "dotnet bin/Debug/netcoreapp1.1/publish/Build.dll $Arguments"
+        }
+    }
+}
+finally {
+    Pop-Location
     exit $LASTEXITCODE;
 }
-Write-Host "Running build..."
-Invoke-Expression "dotnet run -- $Arguments"
-if($LASTEXITCODE -ne 0) {
-    Pop-Location;
-    exit $LASTEXITCODE;
-}
-Pop-Location

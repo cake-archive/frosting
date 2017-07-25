@@ -36,7 +36,7 @@ public class PublishMyGet : FrostingTask<Context>
         // Push files
         foreach(var file in files) 
         {
-            context.NuGetPush(file, new NuGetPushSettings() {
+            context.NuGetPush(file, new NuGetPushSettings {
                 Source = context.MyGetSource,
                 ApiKey = context.MyGetApiKey
             });
