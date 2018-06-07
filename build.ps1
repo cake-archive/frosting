@@ -31,7 +31,7 @@ Param(
     [string[]]$ScriptArgs
 )
 
-$DotNetVersion = "1.0.4";
+$DotNetVersion = "2.1.4";
 $DotNetInstallerUri = "https://dot.net/v1/dotnet-install.ps1";
 $NugetUrl = "https://dist.nuget.org/win-x86-commandline/latest/nuget.exe"
 
@@ -110,7 +110,7 @@ try {
         Invoke-Expression "dotnet publish -c Debug /v:q /nologo"
         if($LASTEXITCODE -eq 0) {
             Write-Output "Running build..."
-            Invoke-Expression "dotnet bin/Debug/netcoreapp1.1/publish/Build.dll $Arguments"
+            Invoke-Expression "bin/Debug/net461/publish/Build.exe $Arguments"
         }
     }
 }
