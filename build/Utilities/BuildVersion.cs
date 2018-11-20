@@ -5,27 +5,13 @@ using Cake.Core;
 
 public class BuildVersion
 {
-    public string Prefix { get; set; }
-    public string Suffix { get; set; }
+    public string Version { get; set; }
+    public string SemVersion { get; set; }
 
-    public BuildVersion(string version, string suffix)
+    public BuildVersion(string version, string semVersion)
     {
-        Prefix = version;
-        Suffix = suffix;
-
-        if(string.IsNullOrWhiteSpace(Suffix))
-        {
-            Suffix = null;
-        }
-    }
-
-    public string GetSemanticVersion()
-    {
-        if(!string.IsNullOrWhiteSpace(Suffix))
-        {
-            return string.Concat(Prefix, "-", Suffix);
-        }
-        return Prefix;
+        Version = version;
+        SemVersion = semVersion;
     }
 
     public static BuildVersion Calculate(Context context)
@@ -57,6 +43,6 @@ public class BuildVersion
             throw new CakeException("Could not calculate version of build.");
         }
 
-        return new BuildVersion(version, semVersion.Substring(version.Length).TrimStart('-'));
+        return new BuildVersion(version, semVersion);
     }
 }

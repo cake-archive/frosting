@@ -2,6 +2,7 @@ using System;
 using Cake.Common;
 using Cake.Common.Diagnostics;
 using Cake.Common.Build;
+using Cake.Common.Tools.DotNetCore.MSBuild;
 using Cake.Frosting;
 using Cake.Core.Diagnostics;
 using Cake.Core.IO;
@@ -35,11 +36,17 @@ public class Lifetime : FrostingLifetime<Context>
 
         // Calculate semantic version.
         context.Version = BuildVersion.Calculate(context);
-        context.Version.Prefix = context.Argument<string>("version", context.Version.Prefix);
-        context.Version.Suffix = context.Argument<string>("suffix", context.Version.Suffix);
+        context.Version.Version = context.Argument<string>("version", context.Version.Version);
+        context.Version.SemVersion = context.Argument<string>("suffix", context.Version.SemVersion);
+
+        // MSBuild Settings
+        context.MSBuildSettings =  new DotNetCoreMSBuildSettings()
+                            .WithProperty("Version", context.Version.SemVersion)
+                            .WithProperty("AssemblyVersion", context.Version.Version)
+                            .WithProperty("FileVersion", context.Version.Version);
 
         context.Information("Version: {0}", context.Version);
-        context.Information("Version suffix: {0}", context.Version.Suffix);
+        context.Information("Sem version: {0}", context.Version.SemVersion);
         context.Information("Configuration: {0}", context.Configuration);
         context.Information("Target: {0}", context.Target);
         context.Information("AppVeyor: {0}", context.AppVeyor);

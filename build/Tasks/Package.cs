@@ -13,8 +13,9 @@ public class Package : FrostingTask<Context>
         var path = new FilePath("./src/Cake.Frosting/Cake.Frosting.csproj");
         context.DotNetCorePack(path.FullPath, new DotNetCorePackSettings {
             Configuration = context.Configuration,
-            VersionSuffix = context.Version.Suffix,
+            MSBuildSettings = context.MSBuildSettings,
             NoBuild = true,
+            NoRestore = true,
             OutputDirectory = context.Artifacts,
             ArgumentCustomization = args => args.Append("--include-symbols --include-source")
         });
