@@ -4,20 +4,21 @@
 
 using System;
 using System.Collections.Generic;
-using Autofac;
+using System.Linq;
 using Cake.Core;
 using Cake.Core.Diagnostics;
+using Cake.Core.IO;
+using Cake.Core.Packaging;
 using Cake.Frosting.Internal;
 using Cake.Frosting.Internal.Commands;
+using Cake.Frosting.Internal.Composition;
 
 namespace Cake.Frosting
 {
     internal sealed class CakeHost : ICakeHost
     {
-        // ReSharper disable once NotAccessedField.Local
-        private readonly ILifetimeScope _scope;
-
         private readonly CakeHostOptions _options;
+        private readonly IFileSystem _fileSystem;
         private readonly IFrostingContext _context;
         private readonly IEnumerable<IFrostingTask> _tasks;
         private readonly IFrostingLifetime _lifetime;
@@ -25,39 +26,72 @@ namespace Cake.Frosting
         private readonly ICakeEnvironment _environment;
         private readonly ICakeEngine _engine;
         private readonly ICakeLog _log;
+        private readonly IToolInstaller _installer;
+        private readonly List<PackageReference> _tools;
         private readonly CommandFactory _commandFactory;
+        private readonly WorkingDirectory _workingDirectory;
         private readonly EngineInitializer _engineInitializer;
 
-        public CakeHost(CakeHostOptions options, CakeHostServices services, ILifetimeScope scope,
-            IFrostingContext context,
-            IEnumerable<IFrostingTask> tasks = null, IFrostingLifetime lifetime = null, IFrostingTaskLifetime taskLifetime = null)
-        {
-            Guard.ArgumentNotNull(scope, nameof(scope));
-            Guard.ArgumentNotNull(services, nameof(services));
-            Guard.ArgumentNotNull(context, nameof(context));
-            Guard.ArgumentNotNull(options, nameof(options));
+        // ReSharper disable once NotAccessedField.Local
+        private readonly Container _container;
 
-            _options = options;
-            _scope = scope; // Keep the scope alive.
+        public CakeHost(IFrostingContext context, Container container, CakeHostOptions options,
+            IFileSystem fileSystem, ICakeEnvironment environment, ICakeEngine engine, ICakeLog log,
+            IToolInstaller installer, IEnumerable<PackageReference> tools,
+            EngineInitializer engineInitializer, CommandFactory commandFactory,
+            WorkingDirectory workingDirectory = null, IEnumerable<IFrostingTask> tasks = null,
+            IFrostingLifetime lifetime = null, IFrostingTaskLifetime taskLifetime = null)
+        {
+            Guard.ArgumentNotNull(context, nameof(context));
+            Guard.ArgumentNotNull(container, nameof(container));
+            Guard.ArgumentNotNull(options, nameof(options));
+            Guard.ArgumentNotNull(fileSystem, nameof(fileSystem));
+            Guard.ArgumentNotNull(environment, nameof(environment));
+            Guard.ArgumentNotNull(engine, nameof(engine));
+            Guard.ArgumentNotNull(log, nameof(log));
+            Guard.ArgumentNotNull(engineInitializer, nameof(engineInitializer));
+            Guard.ArgumentNotNull(commandFactory, nameof(commandFactory));
+
+            // Mandatory arguments.
             _context = context;
+            _container = container;
+            _options = options;
+            _fileSystem = fileSystem;
+            _environment = environment;
+            _engine = engine;
+            _log = log;
+            _installer = installer;
+            _tools = new List<PackageReference>(tools ?? Enumerable.Empty<PackageReference>());
+            _engineInitializer = engineInitializer;
+            _commandFactory = commandFactory;
+
+            // Optional arguments.
+            _workingDirectory = workingDirectory;
             _tasks = tasks;
             _lifetime = lifetime;
             _taskLifetime = taskLifetime;
-
-            _environment = services.Environment;
-            _engine = services.Engine;
-            _log = services.Log;
-            _commandFactory = services.CommandFactory;
-            _engineInitializer = services.EngineInitializer;
         }
 
         public int Run()
         {
             try
             {
-                // Update the log verbosity and working directory.
+                // Update the log verbosity.
                 _log.Verbosity = _options.Verbosity;
-                _environment.WorkingDirectory = _options.WorkingDirectory.MakeAbsolute(_environment);
+
+                // Set the working directory.
+                _environment.WorkingDirectory = GetWorkingDirectory();
+                _log.Debug("Working directory: {0}", _environment.WorkingDirectory.FullPath);
+
+                // Install tools.
+                if (_tools.Count > 0)
+                {
+                    _log.Verbose("Installing tools...");
+                    foreach (var tool in _tools)
+                    {
+                        _installer.Install(tool);
+                    }
+                }
 
                 // Initialize the engine and register everything.
                 _engineInitializer.Initialize(_engine, _context, _tasks, _lifetime, _taskLifetime);
@@ -74,6 +108,19 @@ namespace Cake.Frosting
                 ErrorHandler.OutputError(_log, exception);
                 return ErrorHandler.GetExitCode(exception);
             }
+        }
+
+        private DirectoryPath GetWorkingDirectory()
+        {
+            var workingDirectory = _options.WorkingDirectory ?? _workingDirectory?.Path ?? ".";
+            workingDirectory = workingDirectory.MakeAbsolute(_environment);
+
+            if (!_fileSystem.Exist(workingDirectory))
+            {
+                throw new FrostingException($"The working directory '{workingDirectory.FullPath}' does not exist.");
+            }
+
+            return workingDirectory;
         }
     }
 }

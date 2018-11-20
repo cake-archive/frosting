@@ -26,20 +26,48 @@ namespace Cake.Frosting.Internal
                 foreach (var task in tasks)
                 {
                     var taskName = TaskNameHelper.GetTaskName(task);
-                    _log.Debug("Registering task {0} with engine...", taskName);
+                    _log.Debug("Registering task: {0}", taskName);
 
                     // Get the task's context type.
                     if (!task.HasCompatibleContext(context))
                     {
-                        const string format = "Task cannot be used since the context isn't convertable to {0}.";
+                        const string format = "Task cannot be used since the context isn't convertible to {0}.";
                         _log.Warning(format, task.GetContextType().FullName);
                     }
                     else
                     {
                         // Register task with the Cake engine.
                         var cakeTask = engine.RegisterTask(taskName);
-                        cakeTask.Does(task.Run);
-                        cakeTask.WithCriteria(task.ShouldRun);
+
+                        // Is the run method overridden?
+                        if (task.IsRunOverridden(context))
+                        {
+                            cakeTask.Does(c => task.Run(c));
+                        }
+
+                        // Is the criteria method overridden?
+                        if (task.IsShouldRunOverridden(context))
+                        {
+                            cakeTask.WithCriteria(task.ShouldRun);
+                        }
+
+                        // Continue on error?
+                        if (task.IsContinueOnError())
+                        {
+                            cakeTask.ContinueOnError();
+                        }
+
+                        // Is the on error method overridden?
+                        if (task.IsOnErrorOverridden(context))
+                        {
+                            cakeTask.OnError(exception => task.OnError(exception, context));
+                        }
+
+                        // Is the finally method overridden?
+                        if (task.IsFinallyOverridden(context))
+                        {
+                            cakeTask.Finally(() => task.Finally(context));
+                        }
 
                         // Add dependencies
                         var attributes = task.GetType().GetTypeInfo().GetCustomAttributes<DependencyAttribute>();
@@ -48,7 +76,7 @@ namespace Cake.Frosting.Internal
                             var dependencyName = TaskNameHelper.GetTaskName(dependency);
                             if (!typeof(IFrostingTask).IsAssignableFrom(dependency.Task))
                             {
-                                throw new FrostingException($"The dependency {dependencyName} does not implement IFrostingTask.");
+                                throw new FrostingException($"The dependency '{dependencyName}' is not a valid task.");
                             }
                             cakeTask.IsDependentOn(dependencyName);
                         }
@@ -58,16 +86,31 @@ namespace Cake.Frosting.Internal
 
             if (lifetime != null)
             {
-                _log.Debug("Registering lifetime {0} with engine...", lifetime.GetType().FullName);
-                engine.RegisterSetupAction(info => lifetime.Setup(context));
-                engine.RegisterTeardownAction(info => lifetime.Teardown(context, info));
+                _log.Debug("Registering lifetime: {0}", lifetime.GetType().Name);
+
+                if (lifetime.IsSetupOverridden(context))
+                {
+                    engine.RegisterSetupAction(info => lifetime.Setup(context));
+                }
+                if (lifetime.IsTeardownOverridden(context))
+                {
+                    engine.RegisterTeardownAction(info => lifetime.Teardown(context, info));
+                }
             }
 
             if (taskLifetime != null)
             {
-                _log.Debug("Registering task lifetime {0} with engine...", taskLifetime.GetType().Name);
-                engine.RegisterTaskSetupAction(info => taskLifetime.Setup(context, info));
-                engine.RegisterTaskTeardownAction(info => taskLifetime.Teardown(context, info));
+                _log.Debug("Registering task lifetime: {0}", taskLifetime.GetType().Name);
+
+                if (taskLifetime.IsSetupOverridden(context))
+                {
+                    engine.RegisterTaskSetupAction(info => taskLifetime.Setup(context, info));
+                }
+
+                if (taskLifetime.IsTeardownOverridden(context))
+                {
+                    engine.RegisterTaskTeardownAction(info => taskLifetime.Teardown(context, info));
+                }
             }
         }
     }

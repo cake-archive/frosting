@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.Threading.Tasks;
 using Cake.Core;
 using Cake.Core.Diagnostics;
 
@@ -15,15 +16,11 @@ namespace Cake.Frosting.Internal.Commands
 
         public DryRunExecutionStrategy(ICakeLog log)
         {
-            if (log == null)
-            {
-                throw new ArgumentNullException(nameof(log));
-            }
-            _log = log;
+            _log = log ?? throw new ArgumentNullException(nameof(log));
             _counter = 1;
         }
 
-        public void PerformSetup(Action<ICakeContext> action, ICakeContext context)
+        public void PerformSetup(Action<ISetupContext> action, ISetupContext context)
         {
         }
 
@@ -31,16 +28,17 @@ namespace Cake.Frosting.Internal.Commands
         {
         }
 
-        public void Execute(CakeTask task, ICakeContext context)
+        public Task ExecuteAsync(CakeTask task, ICakeContext context)
         {
             if (task != null)
             {
                 _log.Information("{0}. {1}", _counter, task.Name);
                 _counter++;
             }
+            return Task.CompletedTask;
         }
 
-        public void Skip(CakeTask task)
+        public void Skip(CakeTask task, CakeTaskCriteria criteria)
         {
         }
 

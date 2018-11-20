@@ -14,7 +14,7 @@ namespace Cake.Frosting.Internal
         private readonly CakeConfigurationProvider _provider;
         private readonly CakeHostOptions _options;
         private readonly ICakeEnvironment _environment;
-        private readonly IEnumerable<ConfigurationValue> _values;
+        private readonly IEnumerable<ConfigurationSetting> _values;
         private readonly object _lock;
         private ICakeConfiguration _configuration;
 
@@ -22,7 +22,7 @@ namespace Cake.Frosting.Internal
             CakeConfigurationProvider provider,
             CakeHostOptions options,
             ICakeEnvironment environment,
-            IEnumerable<ConfigurationValue> values)
+            IEnumerable<ConfigurationSetting> values)
         {
             _provider = provider;
             _options = options;
@@ -38,16 +38,15 @@ namespace Cake.Frosting.Internal
             {
                 if (_configuration == null)
                 {
-                    // Add additional configuration values.
                     var arguments = new Dictionary<string, string>(_options.Arguments, StringComparer.OrdinalIgnoreCase);
                     if (_values != null)
                     {
+                        // Add additional configuration values.
                         foreach (var value in _values)
                         {
                             arguments[value.Key] = value.Value;
                         }
                     }
-
                     _configuration = _provider.CreateConfiguration(_environment.WorkingDirectory, arguments);
                 }
                 return _configuration.GetValue(key);

@@ -16,7 +16,7 @@ No tasks will be executed.
 .PARAMETER ScriptArgs
 Remaining arguments are added here.
 .LINK
-http://cakebuild.net
+https://cakebuild.net
 #>
 
 [CmdletBinding()]
@@ -31,10 +31,8 @@ Param(
     [string[]]$ScriptArgs
 )
 
-$CakeVersion = "0.16.0-alpha0025"
-$DotNetChannel = "preview";
-$DotNetVersion = "1.0.0-preview2-003121";
-$DotNetInstallerUri = "https://raw.githubusercontent.com/dotnet/cli/rel/1.0.0-preview2/scripts/obtain/dotnet-install.ps1";
+$DotNetVersion = "2.1.500";
+$DotNetInstallerUri = "https://dot.net/v1/dotnet-install.ps1";
 $NugetUrl = "https://dist.nuget.org/win-x86-commandline/latest/nuget.exe"
 
 # Make sure tools folder exists
@@ -71,7 +69,7 @@ if($FoundDotNetCliVersion -ne $DotNetVersion) {
         mkdir -Force $InstallPath | Out-Null;
     }
     (New-Object System.Net.WebClient).DownloadFile($DotNetInstallerUri, "$InstallPath\dotnet-install.ps1");
-    & $InstallPath\dotnet-install.ps1 -Channel $DotNetChannel -Version $DotNetVersion -InstallDir $InstallPath;
+    & $InstallPath\dotnet-install.ps1 -Version $DotNetVersion -InstallDir $InstallPath;
 
     Remove-PathVariable "$InstallPath"
     $env:PATH = "$InstallPath;$env:PATH"
@@ -91,20 +89,6 @@ if (!(Test-Path $NugetPath)) {
 }
 
 ###########################################################################
-# INSTALL CAKE
-###########################################################################
-
-# Make sure Cake has been installed.
-$CakePath = Join-Path $ToolPath "Cake.CoreCLR.$CakeVersion/Cake.dll"
-if (!(Test-Path $CakePath)) {
-    Write-Host "Installing Cake..."
-    Invoke-Expression "&`"$NugetPath`" install Cake.CoreCLR -Version $CakeVersion -OutputDirectory `"$ToolPath`" -Prerelease" | Out-Null;
-    if ($LASTEXITCODE -ne 0) {
-        Throw "An error occured while restoring Cake from NuGet."
-    }
-}
-
-###########################################################################
 # RUN BUILD SCRIPT
 ###########################################################################
 
@@ -114,9 +98,23 @@ $Arguments = @{
     configuration=$Configuration;
     verbosity=$Verbosity;
     dryrun=$WhatIf;
-}.GetEnumerator() | %{"--{0}=`"{1}`"" -f $_.key, $_.value };
+}.GetEnumerator() | ForEach-Object { "--{0}=`"{1}`"" -f $_.key, $_.value };
 
-# Start Cake
-Write-Host "Running build script..."
-Invoke-Expression "& dotnet `"$CakePath`" `"build.cake`" $Arguments $ScriptArgs"
-exit $LASTEXITCODE
+try {
+    Push-Location
+    Set-Location build
+    Write-Host "Restoring packages..."
+    Invoke-Expression "dotnet restore"
+    if($LASTEXITCODE -eq 0) {
+        Write-Output "Compiling build..."
+        Invoke-Expression "dotnet publish -c Debug /v:q /nologo"
+        if($LASTEXITCODE -eq 0) {
+            Write-Output "Running build..."
+            Invoke-Expression "bin/Debug/net461/publish/Build.exe $Arguments"
+        }
+    }
+}
+finally {
+    Pop-Location
+    exit $LASTEXITCODE;
+}

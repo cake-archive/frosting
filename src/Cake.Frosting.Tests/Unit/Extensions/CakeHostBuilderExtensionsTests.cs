@@ -1,4 +1,8 @@
-﻿using Cake.Core.Diagnostics;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using Cake.Core.Diagnostics;
 using Cake.Frosting.Tests.Data;
 using NSubstitute;
 using Xunit;
@@ -19,7 +23,7 @@ namespace Cake.Frosting.Tests.Unit.Extensions
                 var result = Record.Exception(() => builder.UseStartup<DummyStartup>());
 
                 // Then
-                Assert.IsArgumentNullException(result, "builder");
+                AssertEx.IsArgumentNullException(result, "builder");
             }
 
             [Fact]
@@ -38,7 +42,7 @@ namespace Cake.Frosting.Tests.Unit.Extensions
             }
         }
 
-        public sealed class TheBuildExtensionMethod
+        public sealed class TheWithArgumentsMethod
         {
             [Fact]
             public void Should_Throw_If_Builder_Reference_Is_Null()
@@ -50,7 +54,7 @@ namespace Cake.Frosting.Tests.Unit.Extensions
                 var result = Record.Exception(() => builder.WithArguments(new string[] { }));
 
                 // Then
-                Assert.IsArgumentNullException(result, "builder");
+                AssertEx.IsArgumentNullException(result, "builder");
             }
 
             [Theory]
