@@ -10,7 +10,8 @@ public class Build : FrostingTask<Context>
     {
         context.DotNetCoreBuild("./src/Cake.Frosting.sln", new DotNetCoreBuildSettings {
             Configuration = context.Configuration,
-            ArgumentCustomization = args => args.Append("/p:Version={0}", context.Version.GetSemanticVersion())
+            NoRestore = true,
+            MSBuildSettings = context.MSBuildSettings
         });
     }
 }

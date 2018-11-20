@@ -1,3 +1,4 @@
+using Cake.Common.Tools.DotNetCore.MSBuild;
 using Cake.Core;
 using Cake.Core.IO;
 using Cake.Frosting;
@@ -7,6 +8,7 @@ public class Context : FrostingContext
     public string Target { get; set; }
     public string Configuration { get; set; }
     public BuildVersion Version { get; set; }
+    public DotNetCoreMSBuildSettings MSBuildSettings { get; set; }
 
     public DirectoryPath Artifacts { get; set; }
 

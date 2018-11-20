@@ -26,11 +26,10 @@ public class PublishMyGet : FrostingTask<Context>
 
         // Get the file paths.
         var root = new DirectoryPath("./src/Cake.Frosting");
-        var packageVersion = context.Version.GetSemanticVersion();
         var files = new[] {
-            $"./artifacts/Cake.Frosting.Template.{packageVersion}.nupkg",
-            $"./artifacts/Cake.Frosting.{packageVersion}.nupkg",
-            $"./artifacts/Cake.Frosting.{packageVersion}.symbols.nupkg"
+            $"./artifacts/Cake.Frosting.Template.{context.Version.SemVersion}.nupkg",
+            $"./artifacts/Cake.Frosting.{context.Version.SemVersion}.nupkg",
+            $"./artifacts/Cake.Frosting.{context.Version.SemVersion}.symbols.nupkg"
         };
 
         // Push files

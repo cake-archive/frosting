@@ -9,6 +9,7 @@ public class Restore : FrostingTask<Context>
     {
         context.DotNetCoreRestore("./src", new DotNetCoreRestoreSettings
         {
+            MSBuildSettings = context.MSBuildSettings,
             Sources = new [] {
                 "https://www.myget.org/F/xunit/api/v3/index.json",
                 "https://dotnet.myget.org/F/dotnet-core/api/v3/index.json",
