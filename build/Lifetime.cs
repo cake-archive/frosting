@@ -29,10 +29,11 @@ public class Lifetime : FrostingLifetime<Context>
         context.IsOriginalRepo = StringComparer.OrdinalIgnoreCase.Equals("cake-build/frosting", buildSystem.AppVeyor.Environment.Repository.Name);
         context.IsTagged = IsBuildTagged(buildSystem);
         context.IsMasterBranch = StringComparer.OrdinalIgnoreCase.Equals("master", buildSystem.AppVeyor.Environment.Repository.Branch);
+        context.BuildSystem = buildSystem;
 
         // Install tools
         context.Information("Installing tools...");
-        ToolInstaller.Install(context, "GitVersion.CommandLine", "3.6.2");
+        ToolInstaller.Install(context, "GitVersion.CommandLine", "3.6.5");
 
         // Calculate semantic version.
         context.Version = BuildVersion.Calculate(context);
