@@ -1,3 +1,4 @@
+using Cake.Common.Build;
 using Cake.Common.Tools.DotNetCore.MSBuild;
 using Cake.Core;
 using Cake.Core.IO;
@@ -23,6 +24,8 @@ public class Context : FrostingContext
     public bool ForcePublish { get; set; }
 
     public bool AppVeyor { get; set; }
+
+    public BuildSystem BuildSystem { get; set; }
 
     public Context(ICakeContext context)
         : base(context)
