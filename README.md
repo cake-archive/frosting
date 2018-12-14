@@ -2,10 +2,11 @@
 
 [![AppVeyor branch](https://img.shields.io/appveyor/ci/cakebuild/frosting/develop.svg)](https://ci.appveyor.com/project/cakebuild/frosting/branch/develop) 
 [![MyGet](https://img.shields.io/myget/cake/vpre/Cake.Frosting.svg?label=myget)](https://www.myget.org/feed/cake/package/nuget/Cake.Frosting)
+[![NuGet](https://img.shields.io/nuget/v/Cake.Frosting.svg)](https://www.nuget.org/packages/Cake.Frosting)
 
 A .NET Core host for Cake, that allows you to write your build scripts as a 
-(portable) console application (`netcoreapp1.1` or `net461`). Frosting is currently 
-in alpha, but more information, documentation and samples will be added soon.
+(portable) console application (`netcoreapp2.0` or `net461`). Frosting is currently 
+in pre-release / incubation.
 
 **Expect things to move around initially. Especially naming of things.**
 
@@ -20,17 +21,14 @@ in alpha, but more information, documentation and samples will be added soon.
 
 ## Example
 
-### 1. Install .NET Core SDK 1.0.4 or later
+### 1. Install .NET Core SDK 2.1.500 or later
 
-You can find the SDK at [https://www.microsoft.com/net/download/core](https://www.microsoft.com/net/download/core).
+You can find the SDK at [https://dotnet.microsoft.com/download](https://dotnet.microsoft.com/download).
 
 ### 2. Install the template
 
-Cake.Frosting is currently in preview, so you will have to specify the
-template version explicitly.
-
 ```
-> dotnet new --install Cake.Frosting.Template::0.1.0-*
+> dotnet new --install Cake.Frosting.Template
 ```
 
 ### 3. Create a new Frosting project
@@ -58,7 +56,7 @@ The above command is what you're expected to run from your bootstrapper.
 ### .NET Core SDK
 
 To build from source, you will need to have 
-[.NET Core SDK 1.0.4](https://www.microsoft.com/net/download/core)
+[.NET Core SDK 2.1.4](https://dotnet.microsoft.com/download)
 installed on your machine.
 
 ### Visual Studio 2017 (optional)
