@@ -5,26 +5,15 @@ using Cake.Core.IO;
 using Cake.Frosting;
 
 [Dependency(typeof(Package))]
-[Dependency(typeof(AppVeyorArtifacts))]
-public class PublishMyGet : FrostingTask<Context>
+public class AppVeyorArtifacts : FrostingTask<Context>
 {
     public override bool ShouldRun(Context context)
     {
-        return !context.IsLocalBuild && !context.IsPullRequest && context.IsOriginalRepo 
-            && (context.IsTagged || !context.IsMasterBranch);
+        return context.AppVeyor;
     }
 
     public override void Run(Context context)
     {
-        if(context.MyGetSource == null)
-        {
-            throw new CakeException("MyGet source was not provided.");
-        }
-        if(context.MyGetApiKey == null)
-        {
-            throw new CakeException("MyGet API key was not provided.");
-        }
-
         // Get the file paths.
         var root = new DirectoryPath("./src/Cake.Frosting");
         var files = new[] {
@@ -33,13 +22,13 @@ public class PublishMyGet : FrostingTask<Context>
             $"./artifacts/Cake.Frosting.{context.Version.SemVersion}.symbols.nupkg"
         };
 
+
         // Push files
         foreach(var file in files) 
         {
-            context.NuGetPush(file, new NuGetPushSettings {
-                Source = context.MyGetSource,
-                ApiKey = context.MyGetApiKey
-            });
+            context.BuildSystem.AppVeyor.UploadArtifact(
+                file
+            );
         }
     }
 }

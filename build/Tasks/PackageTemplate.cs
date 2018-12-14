@@ -8,11 +8,14 @@ public class PackageTemplate : FrostingTask<Context>
 {
     public override void Run(Context context)
     {
-        context.XmlPoke(
-            "./template/Build.csproj",
-            "/Project/ItemGroup/PackageReference[@Include = 'Cake.Frosting']/@Version",
-            context.Version.SemVersion
-        );
+        if (context.AppVeyor)
+        {
+            context.XmlPoke(
+                "./template/Build.csproj",
+                "/Project/ItemGroup/PackageReference[@Include = 'Cake.Frosting']/@Version",
+                context.Version.SemVersion
+            );
+        }
 
         context.NuGetPack("./template/Cake.Frosting.Template.nuspec", new NuGetPackSettings
         {
