@@ -13,7 +13,7 @@ public class Lifetime : FrostingLifetime<Context>
     {
         // Arguments
         context.Target = context.Argument<string>("target", "Default");
-        context.Configuration = context.Argument<string>("configuration", "Release");
+        context.BuildConfiguration = context.Argument<string>("configuration", "Release");
         context.ForcePublish = context.Argument<bool>("forcepublish", false);
         context.MyGetSource = GetEnvironmentValueOrArgument(context, "FROSTING_MYGET_SOURCE", "mygetsource");
         context.MyGetApiKey = GetEnvironmentValueOrArgument(context, "FROSTING_MYGET_API_KEY", "mygetapikey");
@@ -33,7 +33,7 @@ public class Lifetime : FrostingLifetime<Context>
 
         // Install tools
         context.Information("Installing tools...");
-        ToolInstaller.Install(context, "GitVersion.CommandLine", "3.6.5");
+        ToolInstaller.Install(context, "GitVersion.CommandLine", "4.0.0");
 
         // Calculate semantic version.
         context.Version = BuildVersion.Calculate(context);
@@ -48,7 +48,7 @@ public class Lifetime : FrostingLifetime<Context>
 
         context.Information("Version: {0}", context.Version);
         context.Information("Sem version: {0}", context.Version.SemVersion);
-        context.Information("Configuration: {0}", context.Configuration);
+        context.Information("Configuration: {0}", context.BuildConfiguration);
         context.Information("Target: {0}", context.Target);
         context.Information("AppVeyor: {0}", context.AppVeyor);
     }

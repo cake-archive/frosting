@@ -9,7 +9,7 @@ public class Build : FrostingTask<Context>
     public override void Run(Context context)
     {
         context.DotNetCoreBuild("./src/Cake.Frosting.sln", new DotNetCoreBuildSettings {
-            Configuration = context.Configuration,
+            Configuration = context.BuildConfiguration,
             NoRestore = true,
             MSBuildSettings = context.MSBuildSettings
         });

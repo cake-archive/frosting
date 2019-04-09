@@ -9,7 +9,7 @@ public class UnitTests : FrostingTask<Context>
     {
         var project = "./src/Cake.Frosting.Tests/Cake.Frosting.Tests.csproj";
         context.DotNetCoreTest(project, new DotNetCoreTestSettings {
-            Configuration = context.Configuration,
+            Configuration = context.BuildConfiguration,
             NoBuild = true
         });
     }
