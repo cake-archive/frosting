@@ -9,11 +9,7 @@ public class Restore : FrostingTask<Context>
     {
         context.DotNetCoreRestore("./src", new DotNetCoreRestoreSettings
         {
-            MSBuildSettings = context.MSBuildSettings,
-            Sources = new [] {
-                "https://api.nuget.org/v3/index.json",
-                "https://www.myget.org/F/cake/api/v3/index.json"
-            }
+            MSBuildSettings = context.MSBuildSettings
         });
     }
 }
