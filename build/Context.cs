@@ -7,7 +7,7 @@ using Cake.Frosting;
 public class Context : FrostingContext
 {
     public string Target { get; set; }
-    public string Configuration { get; set; }
+    public string BuildConfiguration { get; set; }
     public BuildVersion Version { get; set; }
     public DotNetCoreMSBuildSettings MSBuildSettings { get; set; }
 
