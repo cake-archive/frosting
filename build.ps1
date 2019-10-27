@@ -31,7 +31,7 @@ Param(
     [string[]]$ScriptArgs
 )
 
-$DotNetVersion = "2.1.500";
+$DotNetVersion = "2.1.802";
 $DotNetInstallerUri = "https://dot.net/v1/dotnet-install.ps1";
 $NugetUrl = "https://dist.nuget.org/win-x86-commandline/latest/nuget.exe"
 
@@ -82,7 +82,7 @@ if($FoundDotNetCliVersion -ne $DotNetVersion) {
 ###########################################################################
 
 # Make sure nuget.exe exists.
-$NugetPath = Join-Path $ToolPath "nuget.exe" 
+$NugetPath = Join-Path $ToolPath "nuget.exe"
 if (!(Test-Path $NugetPath)) {
     Write-Host "Downloading NuGet.exe..."
     (New-Object System.Net.WebClient).DownloadFile($NugetUrl, $NugetPath);
