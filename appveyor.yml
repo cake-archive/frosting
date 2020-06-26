@@ -24,5 +24,4 @@ branches:
 
 # Build cache
 cache:
-- build.ps1
-- global.json
+- tools -> build.ps1, global.json
