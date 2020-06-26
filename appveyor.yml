@@ -24,4 +24,5 @@ branches:
 
 # Build cache
 cache:
-- tools -> build.cake
+- build.ps1
+- global.json
