@@ -1,6 +1,6 @@
 ﻿{
-  "projects": [ "src", "build" ],
   "sdk": {
-    "version": "2.1.803"
+    "version": "2.1.807",
+    "rollForward": "latestMajor"
   }
 }
