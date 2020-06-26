@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-This is a Powershell script to bootstrap a Cake.Frosting build.
+This is a Powershell script to bootstrap a Cake build.
 .DESCRIPTION
 This Powershell script will download NuGet if missing, restore NuGet tools (including Cake)
 and execute your Cake build script with the parameters you provide.
@@ -16,7 +16,7 @@ No tasks will be executed.
 .PARAMETER ScriptArgs
 Remaining arguments are added here.
 .LINK
-https://github.com/cake-build/frosting
+https://cakebuild.net
 #>
 
 [CmdletBinding()]
@@ -31,7 +31,7 @@ Param(
     [string[]]$ScriptArgs
 )
 
-$DotNetVersion = "1.0.4";
+$DotNetVersion = "3.1.301";
 $DotNetInstallerUri = "https://dot.net/v1/dotnet-install.ps1";
 $NugetUrl = "https://dist.nuget.org/win-x86-commandline/latest/nuget.exe"
 
@@ -82,7 +82,7 @@ if($FoundDotNetCliVersion -ne $DotNetVersion) {
 ###########################################################################
 
 # Make sure nuget.exe exists.
-$NugetPath = Join-Path $ToolPath "nuget.exe" 
+$NugetPath = Join-Path $ToolPath "nuget.exe"
 if (!(Test-Path $NugetPath)) {
     Write-Host "Downloading NuGet.exe..."
     (New-Object System.Net.WebClient).DownloadFile($NugetUrl, $NugetPath);
@@ -110,7 +110,7 @@ try {
         Invoke-Expression "dotnet publish -c Debug /v:q /nologo"
         if($LASTEXITCODE -eq 0) {
             Write-Output "Running build..."
-            Invoke-Expression "dotnet bin/Debug/netcoreapp1.1/publish/Build.dll $Arguments"
+            Invoke-Expression "bin/Debug/net461/publish/Build.exe $Arguments"
         }
     }
 }
