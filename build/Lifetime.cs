@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Cake.Common;
 using Cake.Common.Diagnostics;
 using Cake.Common.Build;
@@ -57,6 +58,24 @@ public class Lifetime : FrostingLifetime<Context>
                             .WithProperty("Version", context.Version.SemVersion)
                             .WithProperty("AssemblyVersion", context.Version.Version)
                             .WithProperty("FileVersion", context.Version.Version);
+
+        if(!context.IsRunningOnWindows())
+        {
+        var frameworkPathOverride = context.Environment.Runtime.IsCoreClr
+                                        ?   new []{
+                                                new DirectoryPath("/Library/Frameworks/Mono.framework/Versions/Current/lib/mono"),
+                                                new DirectoryPath("/usr/lib/mono"),
+                                                new DirectoryPath("/usr/local/lib/mono")
+                                            }
+                                            .Select(directory =>directory.Combine("4.5"))
+                                            .FirstOrDefault(directory => context.FileSystem.Exist(directory))
+                                            ?.FullPath + "/"
+                                        : new FilePath(typeof(object).Assembly.Location).GetDirectory().FullPath + "/";
+
+            // Use FrameworkPathOverride when not running on Windows.
+            context.Information("Build will use FrameworkPathOverride={0} since not building on Windows.", frameworkPathOverride);
+            context.MSBuildSettings.WithProperty("FrameworkPathOverride", frameworkPathOverride);
+        }
 
         context.Information("Version: {0}", context.Version);
         context.Information("Sem version: {0}", context.Version.SemVersion);

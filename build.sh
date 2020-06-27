@@ -42,9 +42,6 @@ fi
 
 echo "Running build script.."
 pushd .
-echo "Changing to build folder..."
 cd build
-echo "dotnet run..."
 dotnet run --project Build.csproj -- "$@"
-echo "going back to previous folder..."
 popd
