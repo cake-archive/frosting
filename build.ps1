@@ -31,7 +31,19 @@ Param(
     [string[]]$ScriptArgs
 )
 
-$DotNetVersion = "3.1.301";
+[string] $DotNetVersion= ''
+foreach($line in Get-Content (Join-Path $PSScriptRoot 'build.config'))
+{
+  if ($line -like 'DOTNET_VERSION=*') {
+      $DotNetVersion =$line.SubString(15)
+  }
+}
+
+if ([string]::IsNullOrEmpty($DotNetVersion)) {
+  'Failed to parse .NET Core SDK Version'
+  exit 1
+}
+
 $DotNetInstallerUri = "https://dot.net/v1/dotnet-install.ps1";
 
 # Make sure tools folder exists
