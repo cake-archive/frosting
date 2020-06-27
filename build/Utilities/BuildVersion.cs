@@ -31,28 +31,25 @@ public class BuildVersion
         string assemblySemVer = null;
         string fullSemVersion = null;
 
-        if (context.IsRunningOnWindows())
+        context.Information("Calculating semantic version...");
+        if (!context.IsLocalBuild)
         {
-            context.Information("Calculating semantic version...");
-            if (!context.IsLocalBuild)
+            context.GitVersion(new GitVersionSettings
             {
-                context.GitVersion(new GitVersionSettings
-                {
-                    OutputType = GitVersionOutput.BuildServer
-                });
-            }
-
-            GitVersion assertedVersions = context.GitVersion(new GitVersionSettings
-            {
-                OutputType = GitVersionOutput.Json
+                OutputType = GitVersionOutput.BuildServer
             });
-            version = assertedVersions.MajorMinorPatch;
-            semVersion = assertedVersions.LegacySemVerPadded;
+        }
+
+        GitVersion assertedVersions = context.GitVersion(new GitVersionSettings
+        {
+            OutputType = GitVersionOutput.Json
+        });
+        version = assertedVersions.MajorMinorPatch;
+        semVersion = assertedVersions.LegacySemVerPadded;
             informationalVersion = assertedVersions.InformationalVersion;
             assemblySemVer = assertedVersions.AssemblySemVer;
             milestone = string.Concat("v", version);     
             fullSemVersion = assertedVersions.FullSemVer;
-        }
 
         if (string.IsNullOrWhiteSpace(version))
         {
