@@ -33,7 +33,6 @@ Param(
 
 $DotNetVersion = "3.1.301";
 $DotNetInstallerUri = "https://dot.net/v1/dotnet-install.ps1";
-$NugetUrl = "https://dist.nuget.org/win-x86-commandline/latest/nuget.exe"
 
 # Make sure tools folder exists
 $PSScriptRoot = Split-Path $MyInvocation.MyCommand.Path -Parent
@@ -75,17 +74,6 @@ if($FoundDotNetCliVersion -ne $DotNetVersion) {
     $env:PATH = "$InstallPath;$env:PATH"
     $env:DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
     $env:DOTNET_CLI_TELEMETRY_OPTOUT=1
-}
-
-###########################################################################
-# INSTALL NUGET
-###########################################################################
-
-# Make sure nuget.exe exists.
-$NugetPath = Join-Path $ToolPath "nuget.exe"
-if (!(Test-Path $NugetPath)) {
-    Write-Host "Downloading NuGet.exe..."
-    (New-Object System.Net.WebClient).DownloadFile($NugetUrl, $NugetPath);
 }
 
 ###########################################################################

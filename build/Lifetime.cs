@@ -39,6 +39,7 @@ public class Lifetime : FrostingLifetime<Context>
 
         // Install tools
         context.Information("Installing tools...");
+        ToolInstaller.Install(context, "NuGet.CommandLine", "5.6.0");
 
         // Install Global .Net Tools
         context.Information("Installing .Net Global Tools...");
