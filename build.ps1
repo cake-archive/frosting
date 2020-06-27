@@ -103,16 +103,8 @@ $Arguments = @{
 try {
     Push-Location
     Set-Location build
-    Write-Host "Restoring packages..."
-    Invoke-Expression "dotnet restore"
-    if($LASTEXITCODE -eq 0) {
-        Write-Output "Compiling build..."
-        Invoke-Expression "dotnet publish -c Debug /v:q /nologo"
-        if($LASTEXITCODE -eq 0) {
-            Write-Output "Running build..."
-            Invoke-Expression "bin/Debug/net461/publish/Build.exe $Arguments"
-        }
-    }
+    Write-Output "Running build..."
+    Invoke-Expression "dotnet run --project Build.csproj -- $Arguments"
 }
 finally {
     Pop-Location
