@@ -19,6 +19,7 @@ public class Lifetime : FrostingLifetime<Context>
         context.AzureArtifactsPersonalAccessToken = GetEnvironmentValueOrArgument(context, "FROSTING_AZURE_ARTIFACTS_PERSONAL_ACCESS_TOKEN", "mygetapikey");
         context.AzureArtifactsSourceName = GetEnvironmentValueOrArgument(context, "FROSTING_AZURE_ARTIFACTS_SOURCE_NAME", "azureartifactssourcename");
         context.AzureArtifactsSourceUserName = GetEnvironmentValueOrArgument(context, "FROSTING_AZURE_ARTIFACTS_SOURCE_USER_NAME", "azureartifactssourceusername");
+        context.GitHubToken = GetEnvironmentValueOrArgument(context, "FROSTING_GITHUB_TOKEN", "githubtoken");
 
         // Directories
         context.Artifacts = new DirectoryPath("./artifacts");
@@ -28,14 +29,21 @@ public class Lifetime : FrostingLifetime<Context>
         context.AppVeyor = buildSystem.AppVeyor.IsRunningOnAppVeyor;
         context.IsLocalBuild = buildSystem.IsLocalBuild;
         context.IsPullRequest = buildSystem.AppVeyor.Environment.PullRequest.IsPullRequest;
-        context.IsOriginalRepo = StringComparer.OrdinalIgnoreCase.Equals("cake-build/frosting", buildSystem.AppVeyor.Environment.Repository.Name);
+        context.PrimaryBranchName = "master";
+        context.RepositoryOwner = "cake-build";
+        context.RepositoryName = "frosting";
+        context.IsOriginalRepo = StringComparer.OrdinalIgnoreCase.Equals(string.Concat(context.RepositoryOwner, "/", context.RepositoryName), buildSystem.AppVeyor.Environment.Repository.Name);
         context.IsTagged = IsBuildTagged(buildSystem);
-        context.IsMasterBranch = StringComparer.OrdinalIgnoreCase.Equals("master", buildSystem.AppVeyor.Environment.Repository.Branch);
+        context.IsPrimaryBranch = StringComparer.OrdinalIgnoreCase.Equals(context.PrimaryBranchName, buildSystem.AppVeyor.Environment.Repository.Branch);
         context.BuildSystem = buildSystem;
 
         // Install tools
         context.Information("Installing tools...");
         ToolInstaller.Install(context, "GitVersion.CommandLine", "4.0.0");
+
+        // Install Global .Net Tools
+        context.Information("Installing .Net Global Tools...");
+        ToolInstaller.DotNetCoreToolInstall(context, "GitReleaseManager.Tool", "0.11.0", "dotnet-gitreleasemanager");
 
         // Calculate semantic version.
         context.Version = BuildVersion.Calculate(context);

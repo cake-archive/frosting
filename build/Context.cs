@@ -18,11 +18,16 @@ public class Context : FrostingContext
     public string AzureArtifactsPersonalAccessToken { get; set; }
     public string AzureArtifactsSourceUserName { get; set; }
 
+    public string GitHubToken { get; set; }
+
     public bool IsLocalBuild { get; set; }
     public bool IsPullRequest { get; set; }
     public bool IsOriginalRepo { get; set; }
+    public string RepositoryOwner { get; set; }
+    public string RepositoryName { get; set; }
     public bool IsTagged { get; set; }
-    public bool IsMasterBranch { get; set; }
+    public bool IsPrimaryBranch { get; set; }
+    public string PrimaryBranchName { get; set; }
     public bool ForcePublish { get; set; }
 
     public bool AppVeyor { get; set; }
