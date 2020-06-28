@@ -13,9 +13,11 @@ public class Context : FrostingContext
 
     public DirectoryPath Artifacts { get; set; }
 
-    public string MyGetSource { get; set; }
-    public string MyGetApiKey { get; set; }
-    
+    public string AzureArtifactsSourceUrl { get; set; }
+    public string AzureArtifactsSourceName { get; set; }
+    public string AzureArtifactsPersonalAccessToken { get; set; }
+    public string AzureArtifactsSourceUserName { get; set; }
+
     public bool IsLocalBuild { get; set; }
     public bool IsPullRequest { get; set; }
     public bool IsOriginalRepo { get; set; }

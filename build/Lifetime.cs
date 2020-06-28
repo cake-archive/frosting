@@ -15,8 +15,10 @@ public class Lifetime : FrostingLifetime<Context>
         context.Target = context.Argument<string>("target", "Default");
         context.BuildConfiguration = context.Argument<string>("configuration", "Release");
         context.ForcePublish = context.Argument<bool>("forcepublish", false);
-        context.MyGetSource = GetEnvironmentValueOrArgument(context, "FROSTING_MYGET_SOURCE", "mygetsource");
-        context.MyGetApiKey = GetEnvironmentValueOrArgument(context, "FROSTING_MYGET_API_KEY", "mygetapikey");
+        context.AzureArtifactsSourceUrl = GetEnvironmentValueOrArgument(context, "FROSTING_AZURE_ARTIFACTS_SOURCE_URL", "azureartifactssourceurl");
+        context.AzureArtifactsPersonalAccessToken = GetEnvironmentValueOrArgument(context, "FROSTING_AZURE_ARTIFACTS_PERSONAL_ACCESS_TOKEN", "mygetapikey");
+        context.AzureArtifactsSourceName = GetEnvironmentValueOrArgument(context, "FROSTING_AZURE_ARTIFACTS_SOURCE_NAME", "azureartifactssourcename");
+        context.AzureArtifactsSourceUserName = GetEnvironmentValueOrArgument(context, "FROSTING_AZURE_ARTIFACTS_SOURCE_USER_NAME", "azureartifactssourceusername");
 
         // Directories
         context.Artifacts = new DirectoryPath("./artifacts");
