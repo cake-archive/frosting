@@ -24,7 +24,6 @@ public class PublishGitHubRelease : FrostingTask<Context>
         }
 
         // Get the file paths.
-        var root = new DirectoryPath("./src/Cake.Frosting");
         var files = new[] {
             $"./artifacts/Cake.Frosting.Template.{context.Version.SemVersion}.nupkg",
             $"./artifacts/Cake.Frosting.{context.Version.SemVersion}.nupkg",

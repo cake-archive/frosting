@@ -16,7 +16,6 @@ public class AppVeyorArtifacts : FrostingTask<Context>
     public override void Run(Context context)
     {
         // Get the file paths.
-        var root = new DirectoryPath("./src/Cake.Frosting");
         var files = new[] {
             $"./artifacts/Cake.Frosting.Template.{context.Version.SemVersion}.nupkg",
             $"./artifacts/Cake.Frosting.{context.Version.SemVersion}.nupkg",
