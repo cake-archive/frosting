@@ -4,6 +4,7 @@ using Cake.Core.IO;
 using Cake.Frosting;
 
 [Dependency(typeof(Package))]
+[Dependency(typeof(PublishAzureArtifacts))]
 public class PublishGitHubRelease : FrostingTask<Context>
 {
     public override bool ShouldRun(Context context)
