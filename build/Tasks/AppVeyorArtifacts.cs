@@ -19,12 +19,12 @@ public class AppVeyorArtifacts : FrostingTask<Context>
         var files = new[] {
             $"./artifacts/Cake.Frosting.Template.{context.Version.SemVersion}.nupkg",
             $"./artifacts/Cake.Frosting.{context.Version.SemVersion}.nupkg",
-            $"./artifacts/Cake.Frosting.{context.Version.SemVersion}.symbols.nupkg"
+            $"./artifacts/Cake.Frosting.{context.Version.SemVersion}.snupkg"
         };
 
 
         // Push files
-        foreach(var file in files) 
+        foreach(var file in files)
         {
             context.BuildSystem.AppVeyor.UploadArtifact(
                 file
