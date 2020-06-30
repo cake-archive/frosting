@@ -40,13 +40,13 @@ public class Lifetime : FrostingLifetime<Context>
 
         // Install tools
         context.Information("Installing tools...");
-        ToolInstaller.Install(context, "NuGet.CommandLine", "5.6.0");
+        context.InstallNuGetExe("5.6.0");
 
         // Install Global .Net Tools
         context.Information("Installing .Net Global Tools...");
-        ToolInstaller.DotNetCoreToolInstall(context, "GitReleaseManager.Tool", "0.11.0", "dotnet-gitreleasemanager");
-        ToolInstaller.DotNetCoreToolInstall(context, "SignClient", "1.2.109", "SignClient");
-        ToolInstaller.DotNetCoreToolInstall(context, "GitVersion.Tool", "5.1.2", "dotnet-gitversion");
+        context.DotNetCoreToolInstall("GitReleaseManager.Tool", "0.11.0", "dotnet-gitreleasemanager");
+        context.DotNetCoreToolInstall("SignClient", "1.2.109", "SignClient");
+        context.DotNetCoreToolInstall("GitVersion.Tool", "5.1.2", "dotnet-gitversion");
 
         // Calculate semantic version.
         context.Version = BuildVersion.Calculate(context);
