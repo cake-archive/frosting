@@ -12,7 +12,7 @@ init:
 
 # Build script
 build_script:
-  - ps: .\build.ps1 -Target "AppVeyor"
+  - ps: .\build.ps1 --target="AppVeyor"
   - sh: ./build.sh --target="AppVeyor"
 
 # Tests
@@ -30,4 +30,4 @@ branches:
 
 # Build cache
 cache:
-- tools -> build.ps1, global.json
+- tools -> build.ps1, global.json, build.sh, build.config

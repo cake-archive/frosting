@@ -1,35 +1,8 @@
-<#
-.SYNOPSIS
-This is a Powershell script to bootstrap a Cake build.
-.DESCRIPTION
-This Powershell script will download NuGet if missing, restore NuGet tools (including Cake)
-and execute your Cake build script with the parameters you provide.
-.PARAMETER Target
-The build script target to run.
-.PARAMETER Configuration
-The build configuration to use.
-.PARAMETER Verbosity
-Specifies the amount of information to be displayed.
-.PARAMETER WhatIf
-Performs a dry run of the build script.
-No tasks will be executed.
-.PARAMETER ScriptArgs
-Remaining arguments are added here.
-.LINK
-https://cakebuild.net
-#>
-
-[CmdletBinding()]
-Param(
-    [string]$Target = "Default",
-    [ValidateSet("Release", "Debug")]
-    [string]$Configuration = "Release",
-    [ValidateSet("Quiet", "Minimal", "Normal", "Verbose", "Diagnostic")]
-    [string]$Verbosity = "Verbose",
-    [switch]$WhatIf,
-    [Parameter(Position=0,Mandatory=$false,ValueFromRemainingArguments=$true)]
-    [string[]]$ScriptArgs
-)
+#!/usr/bin/env pwsh
+$DotNetInstallerUri = 'https://dot.net/v1/dotnet-install.ps1';
+$DotNetUnixInstallerUri = 'https://dot.net/v1/dotnet-install.sh'
+$DotNetChannel = 'LTS'
+$PSScriptRoot = Split-Path $MyInvocation.MyCommand.Path -Parent
 
 [string] $DotNetVersion= ''
 foreach($line in Get-Content (Join-Path $PSScriptRoot 'build.config'))
@@ -39,9 +12,10 @@ foreach($line in Get-Content (Join-Path $PSScriptRoot 'build.config'))
   }
 }
 
+
 if ([string]::IsNullOrEmpty($DotNetVersion)) {
-  'Failed to parse .NET Core SDK Version'
-  exit 1
+    'Failed to parse .NET Core SDK Version'
+    exit 1
 }
 
 $DotNetInstallerUri = "https://dot.net/v1/dotnet-install.ps1";
@@ -92,13 +66,5 @@ if($FoundDotNetCliVersion -ne $DotNetVersion) {
 # RUN BUILD SCRIPT
 ###########################################################################
 
-# Build the argument list.
-$Arguments = @{
-    target=$Target;
-    configuration=$Configuration;
-    verbosity=$Verbosity;
-    dryrun=$WhatIf;
-}.GetEnumerator() | ForEach-Object { "--{0}=`"{1}`"" -f $_.key, $_.value };
-
-dotnet run --project build/Build.csproj -- $Arguments
+dotnet run --project build/Build.csproj -- $args
 exit $LASTEXITCODE;
