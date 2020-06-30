@@ -7,7 +7,7 @@ public class UnitTests : FrostingTask<Context>
 {
     public override void Run(Context context)
     {
-        foreach(var framework in new[] { "netcoreapp2.0", "netcoreapp3.0", "net461" })
+        foreach(var framework in new[] { "netcoreapp2.1", "netcoreapp3.0", "net461" })
         {
             var project = "./src/Cake.Frosting.Tests/Cake.Frosting.Tests.csproj";
 
