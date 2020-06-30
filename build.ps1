@@ -100,13 +100,5 @@ $Arguments = @{
     dryrun=$WhatIf;
 }.GetEnumerator() | ForEach-Object { "--{0}=`"{1}`"" -f $_.key, $_.value };
 
-try {
-    Push-Location
-    Set-Location build
-    Write-Output "Running build..."
-    Invoke-Expression "dotnet run --project Build.csproj -- $Arguments"
-}
-finally {
-    Pop-Location
-    exit $LASTEXITCODE;
-}
+dotnet run --project build/Build.csproj -- $Arguments
+exit $LASTEXITCODE;

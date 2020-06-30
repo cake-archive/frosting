@@ -1,5 +1,10 @@
 # Image used
-image: Visual Studio 2019
+image:
+  - Visual Studio 2019
+  - Ubuntu
+
+environment:
+  APPVEYOR_YML_DISABLE_PS_LINUX: true
 
 # Build script
 init:
@@ -8,6 +13,7 @@ init:
 # Build script
 build_script:
   - ps: .\build.ps1 -Target "AppVeyor"
+  - sh: ./build.sh --target="AppVeyor"
 
 # Tests
 test: off

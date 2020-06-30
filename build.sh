@@ -2,16 +2,10 @@
 # Define varibles
 SCRIPT_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 source $SCRIPT_DIR/build.config
-TOOLS_DIR=$SCRIPT_DIR/tools
 
 if [ "$DOTNET_VERSION" = "" ]; then
     echo "An error occured while parsing .NET Core SDK version."
     exit 1
-fi
-
-# Make sure the tools folder exist.
-if [ ! -d "$TOOLS_DIR" ]; then
-  mkdir "$TOOLS_DIR"
 fi
 
 ###########################################################################
@@ -41,7 +35,4 @@ fi
 ###########################################################################
 
 echo "Running build script.."
-pushd .
-cd build
-dotnet run --project Build.csproj -- "$@"
-popd
+dotnet run --project ./build/Build.csproj -- "$@"
