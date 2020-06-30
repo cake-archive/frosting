@@ -1,39 +1,24 @@
-<#
-.SYNOPSIS
-This is a Powershell script to bootstrap a Cake build.
-.DESCRIPTION
-This Powershell script will download NuGet if missing, restore NuGet tools (including Cake)
-and execute your Cake build script with the parameters you provide.
-.PARAMETER Target
-The build script target to run.
-.PARAMETER Configuration
-The build configuration to use.
-.PARAMETER Verbosity
-Specifies the amount of information to be displayed.
-.PARAMETER WhatIf
-Performs a dry run of the build script.
-No tasks will be executed.
-.PARAMETER ScriptArgs
-Remaining arguments are added here.
-.LINK
-https://cakebuild.net
-#>
+#!/usr/bin/env pwsh
+$DotNetInstallerUri = 'https://dot.net/v1/dotnet-install.ps1';
+$DotNetUnixInstallerUri = 'https://dot.net/v1/dotnet-install.sh'
+$DotNetChannel = 'LTS'
+$PSScriptRoot = Split-Path $MyInvocation.MyCommand.Path -Parent
 
-[CmdletBinding()]
-Param(
-    [string]$Target = "Default",
-    [ValidateSet("Release", "Debug")]
-    [string]$Configuration = "Release",
-    [ValidateSet("Quiet", "Minimal", "Normal", "Verbose", "Diagnostic")]
-    [string]$Verbosity = "Verbose",
-    [switch]$WhatIf,
-    [Parameter(Position=0,Mandatory=$false,ValueFromRemainingArguments=$true)]
-    [string[]]$ScriptArgs
-)
+[string] $DotNetVersion= ''
+foreach($line in Get-Content (Join-Path $PSScriptRoot 'build.config'))
+{
+  if ($line -like 'DOTNET_VERSION=*') {
+      $DotNetVersion =$line.SubString(15)
+  }
+}
 
-$DotNetVersion = "3.1.301";
+
+if ([string]::IsNullOrEmpty($DotNetVersion)) {
+    'Failed to parse .NET Core SDK Version'
+    exit 1
+}
+
 $DotNetInstallerUri = "https://dot.net/v1/dotnet-install.ps1";
-$NugetUrl = "https://dist.nuget.org/win-x86-commandline/latest/nuget.exe"
 
 # Make sure tools folder exists
 $PSScriptRoot = Split-Path $MyInvocation.MyCommand.Path -Parent
@@ -78,43 +63,8 @@ if($FoundDotNetCliVersion -ne $DotNetVersion) {
 }
 
 ###########################################################################
-# INSTALL NUGET
-###########################################################################
-
-# Make sure nuget.exe exists.
-$NugetPath = Join-Path $ToolPath "nuget.exe"
-if (!(Test-Path $NugetPath)) {
-    Write-Host "Downloading NuGet.exe..."
-    (New-Object System.Net.WebClient).DownloadFile($NugetUrl, $NugetPath);
-}
-
-###########################################################################
 # RUN BUILD SCRIPT
 ###########################################################################
 
-# Build the argument list.
-$Arguments = @{
-    target=$Target;
-    configuration=$Configuration;
-    verbosity=$Verbosity;
-    dryrun=$WhatIf;
-}.GetEnumerator() | ForEach-Object { "--{0}=`"{1}`"" -f $_.key, $_.value };
-
-try {
-    Push-Location
-    Set-Location build
-    Write-Host "Restoring packages..."
-    Invoke-Expression "dotnet restore"
-    if($LASTEXITCODE -eq 0) {
-        Write-Output "Compiling build..."
-        Invoke-Expression "dotnet publish -c Debug /v:q /nologo"
-        if($LASTEXITCODE -eq 0) {
-            Write-Output "Running build..."
-            Invoke-Expression "bin/Debug/net461/publish/Build.exe $Arguments"
-        }
-    }
-}
-finally {
-    Pop-Location
-    exit $LASTEXITCODE;
-}
+dotnet run --project build/Build.csproj -- $args
+exit $LASTEXITCODE;

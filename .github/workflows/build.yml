@@ -23,3 +23,9 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: '3.1.301'
+
+      - name: Run Frosting Build
+        env:
+          DOTNET_ROLL_FORWARD_ON_NO_CANDIDATE_FX: 2
+        run: |
+          dotnet run --project ./build/Build.csproj

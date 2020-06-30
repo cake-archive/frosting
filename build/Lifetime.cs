@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Cake.Common;
 using Cake.Common.Diagnostics;
 using Cake.Common.Build;
@@ -39,12 +40,13 @@ public class Lifetime : FrostingLifetime<Context>
 
         // Install tools
         context.Information("Installing tools...");
+        context.InstallNuGetExe("5.6.0");
 
         // Install Global .Net Tools
         context.Information("Installing .Net Global Tools...");
-        ToolInstaller.DotNetCoreToolInstall(context, "GitReleaseManager.Tool", "0.11.0", "dotnet-gitreleasemanager");
-        ToolInstaller.DotNetCoreToolInstall(context, "SignClient", "1.2.109", "SignClient");
-        ToolInstaller.DotNetCoreToolInstall(context, "GitVersion.Tool", "5.1.2", "dotnet-gitversion");
+        context.DotNetCoreToolInstall("GitReleaseManager.Tool", "0.11.0", "dotnet-gitreleasemanager");
+        context.DotNetCoreToolInstall("SignClient", "1.2.109", "SignClient");
+        context.DotNetCoreToolInstall("GitVersion.Tool", "5.1.2", "dotnet-gitversion");
 
         // Calculate semantic version.
         context.Version = BuildVersion.Calculate(context);
@@ -56,6 +58,24 @@ public class Lifetime : FrostingLifetime<Context>
                             .WithProperty("Version", context.Version.SemVersion)
                             .WithProperty("AssemblyVersion", context.Version.Version)
                             .WithProperty("FileVersion", context.Version.Version);
+
+        if(!context.IsRunningOnWindows())
+        {
+        var frameworkPathOverride = context.Environment.Runtime.IsCoreClr
+                                        ?   new []{
+                                                new DirectoryPath("/Library/Frameworks/Mono.framework/Versions/Current/lib/mono"),
+                                                new DirectoryPath("/usr/lib/mono"),
+                                                new DirectoryPath("/usr/local/lib/mono")
+                                            }
+                                            .Select(directory =>directory.Combine("4.5"))
+                                            .FirstOrDefault(directory => context.FileSystem.Exist(directory))
+                                            ?.FullPath + "/"
+                                        : new FilePath(typeof(object).Assembly.Location).GetDirectory().FullPath + "/";
+
+            // Use FrameworkPathOverride when not running on Windows.
+            context.Information("Build will use FrameworkPathOverride={0} since not building on Windows.", frameworkPathOverride);
+            context.MSBuildSettings.WithProperty("FrameworkPathOverride", frameworkPathOverride);
+        }
 
         context.Information("Version: {0}", context.Version);
         context.Information("Sem version: {0}", context.Version.SemVersion);
