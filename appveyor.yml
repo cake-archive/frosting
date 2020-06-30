@@ -8,7 +8,7 @@ environment:
 
 # Build script
 init:
-  - git config --global core.autocrlf true
+  - ps: git config --global core.autocrlf true
 
 # Build script
 build_script:
