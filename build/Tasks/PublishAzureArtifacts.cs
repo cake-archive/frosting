@@ -11,8 +11,13 @@ public class PublishAzureArtifacts : FrostingTask<Context>
 {
     public override bool ShouldRun(Context context)
     {
-        return !context.IsLocalBuild && !context.IsPullRequest && context.IsOriginalRepo
-            && (context.IsTagged || !context.IsPrimaryBranch);
+        return
+            !context.IsLocalBuild &&
+            !context.IsPullRequest &&
+            context.IsOriginalRepo &&
+            context.BuildSystem.IsRunningOnAppVeyor &&
+            context.Environment.Platform.Family == PlatformFamily.Windows &&
+            (context.IsTagged || !context.IsPrimaryBranch);
     }
 
     public override void Run(Context context)

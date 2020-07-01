@@ -13,6 +13,8 @@ public class PublishGitHubRelease : FrostingTask<Context>
             !context.IsPullRequest &&
             context.IsOriginalRepo &&
             context.IsPrimaryBranch &&
+            context.BuildSystem.IsRunningOnAppVeyor &&
+            context.Environment.Platform.Family == PlatformFamily.Windows &&
             context.IsTagged;
     }
 
