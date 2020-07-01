@@ -2,6 +2,7 @@ using System;
 using Cake.Common;
 using Cake.Common.Tools.NuGet;
 using Cake.Common.Tools.NuGet.Push;
+using Cake.Core;
 using Cake.Frosting;
 
 [Dependency(typeof(Package))]
