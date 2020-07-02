@@ -59,6 +59,11 @@ public class Lifetime : FrostingLifetime<Context>
                             .WithProperty("AssemblyVersion", context.Version.Version)
                             .WithProperty("FileVersion", context.Version.Version);
 
+        if(context.AppVeyor)
+        {
+            context.MSBuildSettings.WithProperty("ContinuousIntegrationBuild", "true");
+        }
+
         if(!context.IsRunningOnWindows())
         {
         var frameworkPathOverride = context.Environment.Runtime.IsCoreClr
