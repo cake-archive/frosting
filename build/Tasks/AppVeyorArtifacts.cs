@@ -18,8 +18,7 @@ public class AppVeyorArtifacts : FrostingTask<Context>
         // Get the file paths.
         var files = new[] {
             $"./artifacts/Cake.Frosting.Template.{context.Version.SemVersion}.nupkg",
-            $"./artifacts/Cake.Frosting.{context.Version.SemVersion}.nupkg",
-            $"./artifacts/Cake.Frosting.{context.Version.SemVersion}.snupkg"
+            $"./artifacts/Cake.Frosting.{context.Version.SemVersion}.nupkg"
         };
 
 
