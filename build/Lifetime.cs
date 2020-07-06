@@ -38,10 +38,6 @@ public class Lifetime : FrostingLifetime<Context>
         context.IsPrimaryBranch = StringComparer.OrdinalIgnoreCase.Equals(context.PrimaryBranchName, buildSystem.AppVeyor.Environment.Repository.Branch);
         context.BuildSystem = buildSystem;
 
-        // Install tools
-        context.Information("Installing tools...");
-        context.InstallNuGetExe("5.6.0");
-
         // Install Global .Net Tools
         context.Information("Installing .Net Global Tools...");
         context.DotNetCoreToolInstall("GitReleaseManager.Tool", "0.11.0", "dotnet-gitreleasemanager");
