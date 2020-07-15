@@ -16,8 +16,7 @@ public class Package : FrostingTask<Context>
             MSBuildSettings = context.MSBuildSettings,
             NoBuild = true,
             NoRestore = true,
-            OutputDirectory = context.Artifacts,
-            ArgumentCustomization = args => args.Append("--include-symbols --include-source")
+            OutputDirectory = context.Artifacts
         });
     }
 }

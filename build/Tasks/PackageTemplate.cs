@@ -1,7 +1,8 @@
-using System.Collections.Generic;
-using Cake.Common.Tools.NuGet;
-using Cake.Common.Tools.NuGet.Pack;
+using Cake.Common.Tools.DotNetCore;
+using Cake.Common.Tools.DotNetCore.MSBuild;
+using Cake.Common.Tools.DotNetCore.Pack;
 using Cake.Common.Xml;
+using Cake.Core.IO;
 using Cake.Frosting;
 
 public class PackageTemplate : FrostingTask<Context>
@@ -11,17 +12,19 @@ public class PackageTemplate : FrostingTask<Context>
         if (context.AppVeyor)
         {
             context.XmlPoke(
-                "./template/Build.csproj",
+                "./template/templates/cakefrosting/build/Build.csproj",
                 "/Project/ItemGroup/PackageReference[@Include = 'Cake.Frosting']/@Version",
                 context.Version.SemVersion
             );
         }
 
-        context.NuGetPack("./template/Cake.Frosting.Template.nuspec", new NuGetPackSettings
+        var path = new FilePath("./template/Cake.Frosting.Template.csproj");
+        context.DotNetCorePack(path.FullPath, new DotNetCorePackSettings
         {
-            Version = context.Version.SemVersion,
-            OutputDirectory = context.Artifacts,
-            NoPackageAnalysis = true
+            Configuration = context.BuildConfiguration,
+            MSBuildSettings = new DotNetCoreMSBuildSettings()
+                .WithProperty("Version", context.Version.SemVersion),
+            OutputDirectory = context.Artifacts
         });
     }
 }

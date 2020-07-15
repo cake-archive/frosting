@@ -1,14 +1,9 @@
 # Frosting
 
-[![AppVeyor branch](https://img.shields.io/appveyor/ci/cakebuild/frosting/develop.svg)](https://ci.appveyor.com/project/cakebuild/frosting/branch/develop) 
-[![MyGet](https://img.shields.io/myget/cake/vpre/Cake.Frosting.svg?label=myget)](https://www.myget.org/feed/cake/package/nuget/Cake.Frosting)
-[![NuGet](https://img.shields.io/nuget/v/Cake.Frosting.svg)](https://www.nuget.org/packages/Cake.Frosting)
+[![NuGet](https://img.shields.io/nuget/v/Cake.Frosting.svg)](https://www.nuget.org/packages/Cake.Frosting) [![Azure Artifacts](https://azpkgsshield.azurevoodoo.net/cake-build/Cake/cake/cake.frosting)](https://dev.azure.com/cake-build/Cake/_packaging?_a=package&feed=cake&package=Cake.Frosting&protocolType=NuGet) ![Build](https://github.com/cake-build/frosting/workflows/Build/badge.svg?branch=develop) [![Build status](https://ci.appveyor.com/api/projects/status/hb62doomg0mgc0fx/branch/develop?svg=true)](https://ci.appveyor.com/project/cakebuild/frosting/branch/develop)
 
 A .NET Core host for Cake, that allows you to write your build scripts as a 
-(portable) console application (`netcoreapp2.0` or `net461`). Frosting is currently 
-in pre-release / incubation.
-
-**Expect things to move around initially. Especially naming of things.**
+(portable) console application (`netcoreapp3.1` or `net461`). 
 
 ## Table of Contents
 
@@ -21,7 +16,7 @@ in pre-release / incubation.
 
 ## Example
 
-### 1. Install .NET Core SDK 2.1.500 or later
+### 1. Install .NET Core SDK 3.1.301 or later
 
 You can find the SDK at [https://dotnet.microsoft.com/download](https://dotnet.microsoft.com/download).
 
@@ -56,12 +51,12 @@ The above command is what you're expected to run from your bootstrapper.
 ### .NET Core SDK
 
 To build from source, you will need to have 
-[.NET Core SDK 2.1.4](https://dotnet.microsoft.com/download)
+[.NET Core SDK 3.1.301](https://dotnet.microsoft.com/download)
 installed on your machine.
 
-### Visual Studio 2017 (optional)
+### Visual Studio 2019 (optional)
 
-If you want to develop using Visual Studio, then you need to use Visual Studio 2017 (15.2) or higher.
+If you want to develop using Visual Studio, then you need to use Visual Studio 2019 (16.6) or higher.
 
 ## Acknowledgement
 
@@ -80,11 +75,6 @@ A big thank you has to go to [JetBrains](https://www.jetbrains.com) who provide
 each of the Cake developers with an 
 [Open Source License](https://www.jetbrains.com/support/community/#section=open-source) 
 for [ReSharper](https://www.jetbrains.com/resharper/) that helps with the development of Cake.
-
-The Cake Team would also like to say thank you to the guys at
-[MyGet](https://www.myget.org/) for their support in providing a Professional 
-subscription which allows us to continue to push all of our pre-release 
-editions of Cake NuGet packages for early consumption by the Cake community.
 
 ## Code of Conduct
 

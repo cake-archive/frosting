@@ -1,13 +1,19 @@
 # Image used
-image: Visual Studio 2019
+image:
+  - Visual Studio 2019
+  - Ubuntu
+
+environment:
+  APPVEYOR_YML_DISABLE_PS_LINUX: true
 
 # Build script
 init:
-  - git config --global core.autocrlf true
+  - ps: git config --global core.autocrlf true
 
 # Build script
 build_script:
-  - ps: .\build.ps1 -Target "AppVeyor"
+  - ps: .\build.ps1 --target="AppVeyor"
+  - sh: ./build.sh --target="AppVeyor"
 
 # Tests
 test: off
@@ -24,5 +30,4 @@ branches:
 
 # Build cache
 cache:
-- build.ps1
-- global.json
+- tools -> build.ps1, global.json, build.sh, build.config
