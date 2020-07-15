@@ -1,6 +1,6 @@
 # Frosting
 
-[![NuGet](https://img.shields.io/nuget/v/Cake.Frosting.svg)](https://www.nuget.org/packages/Cake.Frosting) [![Azure Artifacts](https://azpkgsshield.azurevoodoo.net/cake-build/Cake/cake/cake.frosting)](https://dev.azure.com/cake-build/Cake/_packaging?_a=package&feed=cake&package=Cake.Frosting&protocolType=NuGet)
+[![NuGet](https://img.shields.io/nuget/v/Cake.Frosting.svg)](https://www.nuget.org/packages/Cake.Frosting) [![Azure Artifacts](https://azpkgsshield.azurevoodoo.net/cake-build/Cake/cake/cake.frosting)](https://dev.azure.com/cake-build/Cake/_packaging?_a=package&feed=cake&package=Cake.Frosting&protocolType=NuGet) ![Build](https://github.com/cake-build/frosting/workflows/Build/badge.svg?branch=develop) [![Build status](https://ci.appveyor.com/api/projects/status/hb62doomg0mgc0fx/branch/develop?svg=true)](https://ci.appveyor.com/project/cakebuild/frosting/branch/develop)
 
 A .NET Core host for Cake, that allows you to write your build scripts as a 
 (portable) console application (`netcoreapp3.1` or `net461`). 
