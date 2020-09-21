@@ -58,7 +58,8 @@ public class PublishAzureArtifacts : FrostingTask<Context>
         {
             context.NuGetPush(file, new NuGetPushSettings {
                 Source = context.AzureArtifactsSourceName,
-                ApiKey = "az"
+                ApiKey = "az",
+                SkipDuplicate = true
             });
         }
     }
